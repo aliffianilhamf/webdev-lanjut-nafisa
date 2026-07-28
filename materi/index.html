@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nafisa — Full Stack Bootcamp: Backend & ERP Fundamentals</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo">◆</span>
+      <span class="brand">WEB DEVELOPMENT</span>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Tutup sidebar">&times;</button>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="progress-stats" id="progressStats">0% selesai</div>
+      <button class="btn-reset" id="resetBtn" title="Hapus semua progres">↻ Reset</button>
+    </div>
+  </aside>
+
+  <div class="overlay" id="overlay"></div>
+
+  <div class="layout">
+    <header class="mobile-header">
+      <button class="hamburger" id="hamburger" aria-label="Buka menu">☰</button>
+      <span class="mobile-title" id="mobileTitle">Nafisa Bootcamp</span>
+      <span class="mobile-badge" id="mobileBadge"></span>
+    </header>
+
+    <main class="main" id="mainContent"></main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

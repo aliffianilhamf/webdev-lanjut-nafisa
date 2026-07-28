@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 4: Backend Development</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+    }
+    .sidebar {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+    .sidebar h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .sidebar ul {
+      list-style: none;
+    }
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+    .sidebar a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      padding: 12px 15px;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .sidebar a:hover {
+      background: #f0f0f0;
+      color: #667eea;
+      transform: translateX(5px);
+    }
+    .content {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .content h1 {
+      color: #667eea;
+      margin-bottom: 40px;
+      font-size: 36px;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 15px;
+    }
+    .content h2 {
+      color: #333;
+      margin-top: 50px;
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
+    .content h3 {
+      color: #667eea;
+      margin-top: 30px;
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+    .content p {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+    .content ul {
+      margin-left: 25px;
+    }
+    .content li {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-left: 4px solid #667eea;
+    }
+    .visual {
+      margin: 25px 0;
+    }
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-top: 20px;
+      background: #f0f4f8;
+      padding: 25px;
+      border-radius: 10px;
+    }
+    .flow-diagram .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .flow-diagram .label {
+      font-weight: bold;
+      color: #667eea;
+      min-width: 60px;
+    }
+    .flow-diagram .tasks-sync,
+    .flow-diagram .tasks-async {
+      display: flex;
+      gap: 10px;
+    }
+    .flow-diagram .task {
+      width: 80px;
+      height: 50px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flow-diagram .tasks-sync .task { background: #667eea; color: white; }
+    .flow-diagram .tasks-async .task { background: #764ba2; color: white; }
+    .event-diagram, .request-flow {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-top: 20px;
+      background: #f0f4f8;
+      padding: 25px;
+      border-radius: 10px;
+      flex-wrap: wrap;
+    }
+    .emitter, .listener, .client, .server, .response {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .label {
+      font-weight: bold;
+      color: #667eea;
+    }
+    .emitter-box, .listener-box, .middleware {
+      width: 140px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .emitter-box { background: #667eea; color: white; border: 3px solid #764ba2; }
+    .listener-box { background: #764ba2; color: white; border: 3px solid #667eea; }
+    .client, .response {
+      width: 100px;
+      height: 100px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      flex: 1;
+      min-width: 100px;
+    }
+    .client { background: #667eea; }
+    .response { background: #764ba2; }
+    .server { flex: 1; min-width: 250px; }
+    .middleware-stack {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .middleware {
+      width: 70px;
+      height: 70px;
+      background: white;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #667eea;
+    }
+    .arrow-right, .arrow-flow {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+    }
+    .methods-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .method {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+    }
+    .code-block {
+      background: #2d2d2d;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      overflow-x: auto;
+    }
+    .code-block h3 {
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 18px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+    .code-block pre {
+      margin: 0;
+    }
+    .code-block code {
+      color: #f8f8f2;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .exercise-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px;
+      border: 2px solid #667eea;
+    }
+    .exercise-card h3 {
+      color: #667eea;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    .exercise-card ul {
+      margin-left: 20px;
+    }
+    .exercise-card li {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { width: 100%; position: static; }
+      .flow-diagram, .event-diagram, .request-flow { flex-direction: column; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="sidebar">
+      <h2>Module 4</h2>
+      <ul>
+        <li><a href="#async-await">Async/Await</a></li>
+        <li><a href="#event-emitter">Event Emitter</a></li>
+        <li><a href="#express-js">Intro Express.js</a></li>
+        <li><a href="#latihan">Latihan</a></li>
+      </ul>
+    </nav>
+    
+    <main class="content">
+      <h1>Module 4: Backend Development</h1>
+      
+      <section id="async-await">
+        <h2>1. Async/Await</h2>
+        
+        <div class="card">
+          <h3>1.1 Apa itu Async/Await?</h3>
+          <p>Async/Await adalah sintaks modern untuk menangani operasi asynchronous di JavaScript. Ini dibangun di atas Promise dan membuat kode lebih mudah dibaca.</p>
+          
+          <div class="visual">
+            <h4>Synchronous vs Asynchronous</h4>
+            <div class="flow-diagram">
+              <div class="row">
+                <span class="label">Sync:</span>
+                <div class="tasks-sync">
+                  <div class="task">Task 1</div>
+                  <div class="task">Task 2</div>
+                  <div class="task">Task 3</div>
+                </div>
+              </div>
+              <div class="row">
+                <span class="label">Async:</span>
+                <div class="tasks-async">
+                  <div class="task">Task 1</div>
+                  <div class="task">Task 2</div>
+                  <div class="task">Task 3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <h3>1.2 Async Function</h3>
+          <pre><code>async function getData() {
+  return "Hello World";
+}
+
+getData().then(console.log);
+// Output: "Hello World"</code></pre>
+        </div>
+        
+        <div class="code-block">
+          <h3>1.3 Await Keyword</h3>
+          <pre><code>async function fetchData() {
+  try {
+    const response = await fetch('https://api.example.com/data');
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}</code></pre>
+        </div>
+        
+        <div class="code-block">
+          <h3>1.4 Serial vs Parallel</h3>
+          <pre><code>// Serial: Menunggu satu per satu
+async function fetchSerial() {
+  const start = Date.now();
+  const res1 = await fetch('url1');
+  const res2 = await fetch('url2');
+  const res3 = await fetch('url3');
+  console.log(`Serial: ${Date.now() - start}ms`);
+}
+
+// Parallel: Menjalankan bersamaan
+async function fetchParallel() {
+  const start = Date.now();
+  const [res1, res2, res3] = await Promise.all([
+    fetch('url1'),
+    fetch('url2'),
+    fetch('url3')
+  ]);
+  console.log(`Parallel: ${Date.now() - start}ms`);
+}</code></pre>
+        </div>
+      </section>
+      
+      <section id="event-emitter">
+        <h2>2. Event Emitter</h2>
+        
+        <div class="card">
+          <h3>2.1 Apa itu Event Emitter?</h3>
+          <p>Event Emitter adalah pola desain yang memungkinkan objek untuk "mempublikasikan" kejadian (events) dan objek lain untuk "mendengarkan" kejadian tersebut.</p>
+          
+          <div class="visual">
+            <div class="event-diagram">
+              <div class="emitter">
+                <span class="label">Event Emitter</span>
+                <div class="emitter-box">emit('event')</div>
+              </div>
+              <div class="arrow-right">→</div>
+              <div class="listener">
+                <span class="label">Listener</span>
+                <div class="listener-box">on('event', cb)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <h3>2.2 Dasar-Dasar</h3>
+          <pre><code>const EventEmitter = require('events');
+
+class MyEmitter extends EventEmitter {}
+const myEmitter = new MyEmitter();
+
+myEmitter.on('greeting', (name) => {
+  console.log(`Hello, ${name}!`);
+});
+
+myEmitter.emit('greeting', 'Alice');
+// Output: Hello, Alice!</code></pre>
+        </div>
+        
+        <div class="visual">
+          <h3>2.3 Method Utama</h3>
+          <div class="methods-list">
+            <div class="method"><code>on(event, cb)</code> - Daftarkan listener</div>
+            <div class="method"><code>once(event, cb)</code> - Listener sekali</div>
+            <div class="method"><code>off(event, cb)</code> - Batalkan listener</div>
+            <div class="method"><code>emit(event, ...args)</code> - Memicu event</div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="express-js">
+        <h2>3. Intro Express.js</h2>
+        
+        <div class="card">
+          <h3>3.1 Apa itu Express.js?</h3>
+          <p>Express.js adalah framework web minimal dan fleksibel untuk Node.js. Ini menyediakan fitur untuk routing, middleware, template rendering, dan error handling.</p>
+          
+          <div class="visual">
+            <div class="request-flow">
+              <div class="client">Browser</div>
+              <div class="arrow-right">→</div>
+              <div class="server">
+                <span class="label">Express Server</span>
+                <div class="middleware-stack">
+                  <div class="middleware">Log</div>
+                  <div class="middleware">Parse</div>
+                  <div class="middleware">Route</div>
+                </div>
+              </div>
+              <div class="arrow-right">→</div>
+              <div class="response">Response</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <h3>3.2 Instalasi</h3>
+          <pre><code>mkdir express-api
+cd express-api
+npm init -y
+npm install express</code></pre>
+        </div>
+        
+        <div class="code-block">
+          <h3>3.3 Server Dasar</h3>
+          <pre><code>const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});</code></pre>
+        </div>
+        
+        <div class="code-block">
+          <h3>3.4 HTTP Methods (REST API)</h3>
+          <pre><code>app.get('/users', ...)     // List semua users
+app.post('/users', ...)    // Buat user baru
+app.put('/users/:id', ...) // Update user (full)
+app.patch('/users/:id', ...) // Update user (partial)
+app.delete('/users/:id', ...) // Hapus user</code></pre>
+        </div>
+        
+        <div class="code-block">
+          <h3>3.5 Middleware</h3>
+          <pre><code>// 1. Application-level middleware
+app.use((req, res, next) => {
+  console.log(`${new Date()} - ${req.method} ${req.url}`);
+  next();
+});
+
+// 2. Built-in middleware
+app.use(express.json());
+app.use(express.urlencoded());
+
+// 3. Error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
+});</code></pre>
+        </div>
+      </section>
+      
+      <section id="latihan">
+        <h2>Latihan Praktis</h2>
+        
+        <div class="exercise-card">
+          <h3>Exercise 1: Async/Await</h3>
+          <p>Buat function <code>fetchUserPosts(userId)</code> yang:</p>
+          <ul>
+            <li>Fetch user data dari <code>/users/:id</code></li>
+            <li>Fetch posts dari <code>/users/:id/posts</code></li>
+            <li>Return combined data</li>
+            <li>Handle errors dengan try-catch</li>
+          </ul>
+        </div>
+        
+        <div class="exercise-card">
+          <h3>Exercise 2: Event Emitter</h3>
+          <p>Buat class <code>Counter</code> yang:</p>
+          <ul>
+            <li>Emit event saat count bertambah</li>
+            <li>Emit event saat count mencapai target</li>
+            <li>Bisa di-reset</li>
+          </ul>
+        </div>
+        
+        <div class="exercise-card">
+          <h3>Exercise 3: Express.js</h3>
+          <p>Buat REST API untuk product management:</p>
+          <ul>
+            <li>GET <code>/api/products</code> - list semua products</li>
+            <li>POST <code>/api/products</code> - create product</li>
+            <li>PUT <code>/api/products/:id</code> - update product</li>
+            <li>DELETE <code>/api/products/:id</code> - delete product</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
