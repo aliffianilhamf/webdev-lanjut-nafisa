@@ -33,6 +33,22 @@ const MODULES = [
     {id:'m4-c',label:'C. Intro Express.js'},
     {id:'m4-d',label:'D. Guided Lab'},
     {id:'m4-e',label:'Take-Home'},
+  ]},
+  {id:'m5',label:'Module 5',color:'var(--m5)',colorBg:'var(--m5-light)',badgeColor:'#F59E0B',badge:'Express & REST API',sections:[
+    {id:'m5-plan',label:'Lesson Plan'},
+    {id:'m5-a',label:'A. Express Routing'},
+    {id:'m5-b',label:'B. Middleware'},
+    {id:'m5-c',label:'C. Konsep REST API'},
+    {id:'m5-d',label:'D. Guided Lab'},
+    {id:'m5-e',label:'Take-Home'},
+  ]},
+  {id:'m6',label:'Module 6',color:'var(--m6)',colorBg:'var(--m6-light)',badgeColor:'#14B8A6',badge:'Praktik REST API CRUD',sections:[
+    {id:'m6-plan',label:'Lesson Plan'},
+    {id:'m6-a',label:'A. Struktur Proyek'},
+    {id:'m6-b',label:'B. Read & Create'},
+    {id:'m6-c',label:'C. Update & Delete'},
+    {id:'m6-d',label:'D. Guided Lab'},
+    {id:'m6-e',label:'Take-Home'},
   ]}
 ];
 const ALL_IDS = MODULES.flatMap(m=>m.sections.map(s=>s.id));
@@ -156,6 +172,70 @@ const DIAGRAMS = {
     <line x1="460" y1="230" x2="460" y2="255" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arrow2)"/>
     <rect x="130" y="255" width="400" height="40" rx="6" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
     <text x="330" y="280" font-family="sans-serif" font-size="11" fill="#475569" font-weight="600" text-anchor="middle">🐧 Sistem Operasi (Linux / macOS / Windows)</text>
+  `,
+  restApi: `
+    <defs>
+      <marker id="arrowRest" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#94A3B8"/></marker>
+    </defs>
+    <rect x="50" y="30" width="120" height="220" rx="8" fill="#F8FAFC" stroke="#64748B" stroke-width="2"/>
+    <text x="110" y="60" font-family="sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">Client</text>
+    <text x="110" y="80" font-family="sans-serif" font-size="12" fill="#475569" text-anchor="middle">(Web / Mobile)</text>
+    <rect x="290" y="30" width="140" height="220" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+    <text x="360" y="60" font-family="sans-serif" font-size="14" font-weight="600" fill="#1D4ED8" text-anchor="middle">Server (API)</text>
+    <text x="360" y="80" font-family="sans-serif" font-size="12" fill="#3B82F6" text-anchor="middle">Node.js + Express</text>
+    <rect x="550" y="30" width="100" height="220" rx="8" fill="#F0FDF4" stroke="#10B981" stroke-width="2"/>
+    <text x="600" y="60" font-family="sans-serif" font-size="14" font-weight="600" fill="#047857" text-anchor="middle">Database</text>
+    <text x="600" y="80" font-family="sans-serif" font-size="12" fill="#10B981" text-anchor="middle">(JSON / SQL)</text>
+    
+    <line x1="170" y1="110" x2="280" y2="110" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowRest)"/>
+    <text x="225" y="100" font-family="sans-serif" font-size="11" fill="#475569" text-anchor="middle">GET /api/items</text>
+    
+    <line x1="280" y1="140" x2="170" y2="140" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowRest)"/>
+    <text x="225" y="135" font-family="sans-serif" font-size="11" fill="#475569" text-anchor="middle">200 OK + JSON</text>
+    
+    <line x1="170" y1="180" x2="280" y2="180" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowRest)"/>
+    <text x="225" y="170" font-family="sans-serif" font-size="11" fill="#475569" text-anchor="middle">POST /api/items</text>
+    
+    <line x1="280" y1="210" x2="170" y2="210" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowRest)"/>
+    <text x="225" y="205" font-family="sans-serif" font-size="11" fill="#475569" text-anchor="middle">201 Created</text>
+    
+    <line x1="430" y1="125" x2="540" y2="125" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowRest)"/>
+    <text x="485" y="115" font-family="sans-serif" font-size="11" fill="#475569" text-anchor="middle">Query Data</text>
+    
+    <line x1="540" y1="165" x2="430" y2="165" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowRest)"/>
+    <text x="485" y="155" font-family="sans-serif" font-size="11" fill="#475569" text-anchor="middle">Return Data</text>
+  `,
+  middlewareFlow: `
+    <defs>
+      <marker id="arrowMw" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#94A3B8"/></marker>
+    </defs>
+    <rect x="50" y="80" width="90" height="50" rx="8" fill="#F8FAFC" stroke="#64748B" stroke-width="2"/>
+    <text x="95" y="110" font-family="sans-serif" font-size="13" font-weight="600" fill="#1E293B" text-anchor="middle">Request</text>
+    
+    <rect x="190" y="60" width="110" height="90" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
+    <text x="245" y="85" font-family="sans-serif" font-size="12" font-weight="600" fill="#92400E" text-anchor="middle">Middleware 1</text>
+    <text x="245" y="105" font-family="sans-serif" font-size="11" fill="#B45309" text-anchor="middle">(Logger)</text>
+    <rect x="215" y="120" width="60" height="20" rx="4" fill="#FDE68A" stroke="#D97706" stroke-width="1"/>
+    <text x="245" y="134" font-family="sans-serif" font-size="10" font-weight="600" fill="#92400E" text-anchor="middle">next()</text>
+    
+    <rect x="350" y="60" width="110" height="90" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="2"/>
+    <text x="405" y="85" font-family="sans-serif" font-size="12" font-weight="600" fill="#92400E" text-anchor="middle">Middleware 2</text>
+    <text x="405" y="105" font-family="sans-serif" font-size="11" fill="#B45309" text-anchor="middle">(Auth)</text>
+    <rect x="375" y="120" width="60" height="20" rx="4" fill="#FDE68A" stroke="#D97706" stroke-width="1"/>
+    <text x="405" y="134" font-family="sans-serif" font-size="10" font-weight="600" fill="#92400E" text-anchor="middle">next()</text>
+    
+    <rect x="510" y="60" width="110" height="90" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+    <text x="565" y="85" font-family="sans-serif" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">Route Handler</text>
+    <text x="565" y="105" font-family="sans-serif" font-size="11" fill="#047857" text-anchor="middle">app.get(...)</text>
+    <rect x="535" y="120" width="60" height="20" rx="4" fill="#A7F3D0" stroke="#059669" stroke-width="1"/>
+    <text x="565" y="134" font-family="sans-serif" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">res.send()</text>
+    
+    <line x1="140" y1="105" x2="180" y2="105" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowMw)"/>
+    <line x1="300" y1="105" x2="340" y2="105" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowMw)"/>
+    <line x1="460" y1="105" x2="500" y2="105" stroke="#94A3B8" stroke-width="2" marker-end="url(#arrowMw)"/>
+    
+    <path d="M 565 150 L 565 200 L 95 200 L 95 130" fill="none" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrowMw)"/>
+    <text x="330" y="190" font-family="sans-serif" font-size="12" font-weight="600" fill="#2563EB" text-anchor="middle">Response (res)</text>
   `
 };
 
@@ -1420,9 +1500,377 @@ CONTENT['m4-e'] = `
   ${callout('instructor','Catatan Instruktur','Tugas ini menguji pemahaman tentang Event Emitter (pub/sub pattern), Express.js (REST API), dan kemampuan memisahkan concern (separation of concerns). Solusi ideal akan memiliki 3 file terpisah yang masing-masing punya tanggung jawab spesifik.')}
 </div>`;
 
+// ── MODULE 5 CONTENT ──
+CONTENT['m5-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F59E0B">Module 5</span>
+  <h1 class="section-title">Lesson Plan — Express Routing, Middleware &amp; REST API</h1>
+  <p class="section-subtitle">Pertemuan 5 — Arsitektur REST API dengan Express.js</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Memahami konsep dasar arsitektur REST API</li>
+    <li>Menggunakan HTTP Methods (GET, POST, PUT, DELETE) dengan benar</li>
+    <li>Membuat routing dinamis dengan route parameters dan query strings di Express.js</li>
+    <li>Memahami dan membuat custom Middleware untuk manipulasi request dan response</li>
+    <li>Membangun REST API CRUD komprehensif untuk sistem manajemen barang</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>20 menit</td><td>Konsep REST API — resource, verbs, status codes</td></tr>
+    <tr><td>25 menit</td><td>Express Routing — params, query, response formatting</td></tr>
+    <tr><td>25 menit</td><td>Express Middleware — next(), request logging, error handling</td></tr>
+    <tr><td>40 menit</td><td>Guided Lab: Membangun REST API Gudang dengan Middleware</td></tr>
+    <tr><td>10 menit</td><td>Diskusi &amp; Take-Home Assignment</td></tr>
+  </table>
+  <h2>Studi Kasus ERP</h2>
+  <p>Di modul sebelumnya kita telah membuat event-driven warehouse sederhana. Sekarang, kita akan merombaknya menjadi sistem yang mengikuti standar <strong>RESTful API</strong>. Kita juga akan mengamankan API kita menggunakan middleware untuk simulasi autentikasi sederhana, sebuah langkah penting untuk keamanan sistem informasi manajemen seperti ERP.</p>
+</div>`;
 
+CONTENT['m5-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F59E0B">Module 5 · Section A</span>
+  <h1 class="section-title">Express Routing: Route Parameters & Query Strings</h1>
+  <p class="section-subtitle">Mengekstrak data dari URL</p>
+</div>
+<div class="content">
+  <h2>Routing Dinamis di Express</h2>
+  <p>Sebelum menggunakan Express, routing di Node.js murni sangat rumit karena kita harus membedah URL (seperti <code>/api/items/BRG-001</code>) secara manual. Express menyederhanakan ini:</p>
+  ${sideBySide('Vanilla Node.js HTTP','const http = require("http");\\nhttp.createServer((req, res) => {\\n  if (req.url.startsWith("/api/items/")) {\\n    const id = req.url.split("/")[3];\\n    res.end("Item: " + id);\\n  }\\n});','Express.js','const express = require("express");\\nconst app = express();\\n\\napp.get("/api/items/:id", (req, res) => {\\n  const id = req.params.id;\\n  res.send("Item: " + id);\\n});')}
+  
+  <h3>Route Parameters (req.params)</h3>
+  <p>Route params digunakan untuk menangkap nilai langsung dari segmen URL, biasanya untuk mengidentifikasi <em>resource</em> spesifik. Parameter diawali dengan titik dua (<code>:</code>).</p>
+  ${codeBlock('javascript','app.get(\'/api/items/:id\', (req, res) => {\n  // URL: /api/items/BRG-001\n  const itemId = req.params.id; // "BRG-001"\n  res.json({ message: "Mencari barang " + itemId });\n});\n\n// Multiple parameters\napp.get(\'/api/warehouses/:warehouseId/items/:itemId\', (req, res) => {\n  // URL: /api/warehouses/WH-A/items/BRG-001\n  const { warehouseId, itemId } = req.params;\n  res.json({ warehouseId, itemId });\n});')}
 
+  <h3>Query Strings (req.query)</h3>
+  <p>Query strings dikirim setelah tanda tanya <code>?</code> pada URL. Biasanya digunakan untuk <em>filtering</em>, <em>sorting</em>, atau <em>pagination</em>.</p>
+  ${codeBlock('javascript','app.get(\'/api/items\', (req, res) => {\n  // URL: /api/items?category=hardware&sort=price_asc\n  const category = req.query.category; // "hardware"\n  const sortBy = req.query.sort; // "price_asc"\n  res.json({ filtering: category, sorting: sortBy });\n});')}
 
+  ${callout('info','Best Practice','Gunakan <strong>params</strong> untuk mengidentifikasi "apa" yang sedang diakses (misal ID barang). Gunakan <strong>query</strong> untuk memodifikasi "bagaimana" resource itu ditampilkan (misal cari, filter, urutkan).')}
+
+  ${quiz('q5a','Jika client mengakses endpoint dengan URL /api/users/88?role=admin, bagaimana kita mendapatkan angka 88 dan string admin di Express?',['req.body.id dan req.body.role','req.query.id dan req.params.role','req.params.id dan req.query.role','req.url.id dan req.url.role'],2,'88 berada di path sehingga dapat diakses via req.params (asumsi rutenya /api/users/:id), sementara role=admin ada setelah tanda tanya sehingga diakses via req.query.')}
+</div>`;
+
+CONTENT['m5-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F59E0B">Module 5 · Section B</span>
+  <h1 class="section-title">Express Middleware</h1>
+  <p class="section-subtitle">Siklus hidup Request-Response</p>
+</div>
+<div class="content">
+  <h2>Apa itu Middleware?</h2>
+  <p>Middleware adalah fungsi yang memiliki akses ke objek request (<code>req</code>), objek response (<code>res</code>), dan fungsi middleware selanjutnya dalam siklus request-response (biasanya disebut <code>next</code>).</p>
+  
+  ${diagramSvg(DIAGRAMS.middlewareFlow, 'Gambar 1: Alur eksekusi Middleware di Express.js — request melewati rantai middleware sebelum mencapai route handler.')}
+
+  <p>Middleware dapat digunakan untuk:</p>
+  <ul>
+    <li>Mengeksekusi kode apa pun (misal logging).</li>
+    <li>Memodifikasi request dan response object.</li>
+    <li>Mengakhiri siklus request-response (seperti block request yang tidak sah).</li>
+    <li>Memanggil fungsi middleware selanjutnya dalam stack (dengan <code>next()</code>).</li>
+  </ul>
+
+  <h3>Membuat Custom Middleware</h3>
+  ${codeBlock('javascript','const express = require(\'express\');\nconst app = express();\n\n// 1. Logger Middleware (Global)\nconst requestLogger = (req, res, next) => {\n  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);\n  next(); // Wajib dipanggil! Jika tidak, request akan hang\n};\napp.use(requestLogger);\n\n// 2. Auth Middleware (Spesifik Route)\nconst checkAuth = (req, res, next) => {\n  const token = req.headers.authorization;\n  if (token === \'secret-token\') {\n    next(); // Lolos, lanjut ke route handler\n  } else {\n    res.status(401).json({ error: \'Unauthorized\' }); // Akhiri siklus, jangan panggil next()\n  }\n};\n\napp.get(\'/api/secure-data\', checkAuth, (req, res) => {\n  res.json({ data: \'Informasi Rahasia ERP\' });\n});')}
+
+  <h3>Built-in Middleware</h3>
+  <p>Express memiliki beberapa middleware bawaan. Yang paling krusial untuk membuat REST API adalah body parser:</p>
+  ${codeBlock('javascript','// Untuk mem-parsing application/json dari body request\napp.use(express.json());\n\n// Untuk mem-parsing application/x-www-form-urlencoded\napp.use(express.urlencoded({ extended: true }));')}
+
+  ${callout('danger','Penting tentang next()','Jika sebuah middleware tidak mengakhiri request dengan mengirim respons (misal <code>res.send()</code> atau <code>res.json()</code>), ia <strong>harus</strong> memanggil <code>next()</code>. Jika lupa, aplikasi tidak akan pernah memberikan respons ke client (client akan loading terus sampai time out).')}
+
+  ${quiz('q5b','Apa fungsi utama dari pemanggilan fungsi next() dalam sebuah middleware?',['Mengirim respons sukses (HTTP 200) secara otomatis','Menghentikan proses agar server tidak kepanasan','Memanggil dan meneruskan proses ke middleware atau route handler berikutnya','Me-refresh halaman web client'],2,'next() digunakan untuk memberi tahu Express bahwa middleware saat ini telah selesai dan eksekusi harus dilanjutkan ke middleware/route handler berikutnya.')}
+</div>`;
+
+CONTENT['m5-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F59E0B">Module 5 · Section C</span>
+  <h1 class="section-title">Konsep REST API</h1>
+  <p class="section-subtitle">Mendesain API yang standar dan profesional</p>
+</div>
+<div class="content">
+  <h2>Apa itu REST?</h2>
+  <p><strong>REST (Representational State Transfer)</strong> adalah gaya arsitektur standar dalam pembuatan API. API yang mematuhi prinsip REST disebut sebagai <strong>RESTful API</strong>. REST bertindak sebagai jembatan yang menghubungkan client (browser/mobile) dengan server database secara terstandarisasi.</p>
+  
+  ${diagramSvg(DIAGRAMS.restApi, 'Gambar 2: Arsitektur REST API — memisahkan antarmuka (Client) dengan penyimpan data (Database) melalui lapisan Server HTTP.')}
+
+  <h3>Prinsip Utama REST</h3>
+  <ol>
+    <li><strong>Client-Server:</strong> Frontend dan backend terpisah dan tidak bergantung pada implementasi satu sama lain.</li>
+    <li><strong>Stateless:</strong> Setiap request dari client harus menyertakan semua informasi yang dibutuhkan. Server tidak menyimpan "sesi" dari client.</li>
+    <li><strong>Resource-Based:</strong> Segala hal dipandang sebagai "sumber daya" (Resource) yang diidentifikasi oleh URI (misal <code>/items</code>).</li>
+  </ol>
+
+  <h3>HTTP Methods (Verbs)</h3>
+  <p>REST API menggunakan HTTP verbs untuk menentukan aksi (CRUD) pada sebuah resource:</p>
+  <table>
+    <tr><th>Method</th><th>Operasi CRUD</th><th>Contoh URL</th><th>Deskripsi</th></tr>
+    <tr><td><code>GET</code></td><td>Read</td><td><code>/api/items</code></td><td>Mendapatkan semua daftar barang</td></tr>
+    <tr><td><code>GET</code></td><td>Read</td><td><code>/api/items/1</code></td><td>Mendapatkan detail barang dengan ID 1</td></tr>
+    <tr><td><code>POST</code></td><td>Create</td><td><code>/api/items</code></td><td>Menambahkan barang baru</td></tr>
+    <tr><td><code>PUT / PATCH</code></td><td>Update</td><td><code>/api/items/1</code></td><td>Memperbarui data barang dengan ID 1</td></tr>
+    <tr><td><code>DELETE</code></td><td>Delete</td><td><code>/api/items/1</code></td><td>Menghapus barang dengan ID 1</td></tr>
+  </table>
+
+  <h3>HTTP Status Codes</h3>
+  <p>Server juga harus mengembalikan kode status yang sesuai untuk mengindikasi hasil request:</p>
+  <ul>
+    <li><strong>2xx (Sukses):</strong> 200 OK (GET sukses), 201 Created (POST sukses), 204 No Content (DELETE sukses).</li>
+    <li><strong>4xx (Kesalahan Client):</strong> 400 Bad Request (Data input salah), 401 Unauthorized (Belum login), 403 Forbidden, 404 Not Found (Resource tidak ada).</li>
+    <li><strong>5xx (Kesalahan Server):</strong> 500 Internal Server Error, 503 Service Unavailable.</li>
+  </ul>
+
+  ${callout('warning','Penamaan URL yang Baik','Gunakan kata benda (noun) jamak, BUKAN kata kerja (verb). <br>✅ BENAR: <code>GET /api/items</code> <br>❌ SALAH: <code>GET /api/getItems</code>')}
+</div>`;
+
+CONTENT['m5-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F59E0B">Module 5 · Section D</span>
+  <h1 class="section-title">Guided Lab: Membangun REST API Gudang</h1>
+  <p class="section-subtitle">Praktik membuat CRUD RESTful API dengan Middleware</p>
+</div>
+<div class="content">
+  <p>Pada lab ini, kita akan membangun REST API lengkap untuk mengelola daftar barang (item) menggunakan memori array sementara. Kita juga mengimplementasikan Middleware autentikasi.</p>
+
+  <div class="step-tracker" id="st-m5-d"></div>
+
+  ${stepCard(1,'Setup Project',`
+    <p>Buat folder baru dan install express:</p>
+    ${codeBlock('bash','mkdir erp-rest-api\ncd erp-rest-api\nnpm init -y\nnpm install express')}
+  `,true)}
+
+  ${stepCard(2,'Buat Basic Server & Middleware',`
+    <p>Buat file <code>app.js</code>:</p>
+    ${codeBlock('javascript','const express = require(\'express\');\nconst app = express();\n\n// Built-in middleware untuk parsing JSON\napp.use(express.json());\n\n// Custom Logger Middleware\napp.use((req, res, next) => {\n  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);\n  next();\n});\n\n// Custom Auth Middleware\nconst authenticate = (req, res, next) => {\n  const token = req.header(\'X-API-Key\');\n  if (token === \'erp123\') {\n    next();\n  } else {\n    res.status(401).json({ error: \'Akses Ditolak. API Key tidak valid.\' });\n  }\n};\n\napp.listen(3000, () => console.log(\'REST API berjalan di port 3000\'));')}
+  `)}
+
+  ${stepCard(3,'Implementasi GET dan POST (Create & Read)',`
+    <p>Tambahkan array sementara dan routing berikut di <code>app.js</code> (sebelum app.listen):</p>
+    ${codeBlock('javascript','// Data sementara\nlet inventory = [\n  { id: \'BRG-001\', name: \'Mur M8\', stock: 100 },\n  { id: \'BRG-002\', name: \'Baut M6\', stock: 50 }\n];\n\n// GET - Ambil semua data (bisa filter via query)\napp.get(\'/api/items\', authenticate, (req, res) => {\n  const { search } = req.query;\n  let results = inventory;\n  \n  if (search) {\n    results = inventory.filter(i => i.name.toLowerCase().includes(search.toLowerCase()));\n  }\n  res.status(200).json(results);\n});\n\n// GET - Ambil satu data berdasarkan ID (Route Params)\napp.get(\'/api/items/:id\', authenticate, (req, res) => {\n  const item = inventory.find(i => i.id === req.params.id);\n  if (!item) {\n    return res.status(404).json({ error: \'Barang tidak ditemukan\' });\n  }\n  res.status(200).json(item);\n});\n\n// POST - Tambah data baru\napp.post(\'/api/items\', authenticate, (req, res) => {\n  const { id, name, stock } = req.body;\n  if (!id || !name || typeof stock !== \'number\') {\n    return res.status(400).json({ error: \'Data tidak valid\' });\n  }\n  \n  const newItem = { id, name, stock };\n  inventory.push(newItem);\n  res.status(201).json({ message: \'Barang ditambahkan\', item: newItem });\n});')}
+  `)}
+
+  ${stepCard(4,'Uji Coba dengan Client (cURL / Postman)',`
+    <p>Jalankan server (<code>node app.js</code>) dan uji API tersebut. Pastikan menyertakan Header <code>X-API-Key: erp123</code>!</p>
+    ${codeBlock('bash','// Test Auth (Akan Gagal)\ncurl http://localhost:3000/api/items\n\n// Test GET Semua Items (Sukses)\ncurl -H "X-API-Key: erp123" http://localhost:3000/api/items\n\n// Test GET dengan Query\ncurl -H "X-API-Key: erp123" "http://localhost:3000/api/items?search=Baut"\n\n// Test POST Data\ncurl -X POST -H "Content-Type: application/json" -H "X-API-Key: erp123" -d \'{"id":"BRG-003", "name":"Plat Besi", "stock":30}\' http://localhost:3000/api/items')}
+  `)}
+
+  ${callout('info','Catatan Praktik','Perhatikan bagaimana setiap endpoint memiliki tanggung jawab dan URL yang seragam (<code>/api/items</code>). Ini membuat API sangat mudah digunakan oleh Frontend developer (seperti React / Vue).')}
+</div>`;
+
+CONTENT['m5-e'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F59E0B">Module 5 · Section E</span>
+  <h1 class="section-title">Take-Home: Lengkapi CRUD REST API Gudang</h1>
+  <p class="section-subtitle">Mengimplementasikan UPDATE dan DELETE</p>
+</div>
+<div class="content">
+  <h2>Tugas</h2>
+  <p>Lanjutkan kode dari Guided Lab sebelumnya. Sistem saat ini baru memiliki fitur Create (POST) dan Read (GET). Tugas Anda adalah menyempurnakan API dengan fitur Update dan Delete.</p>
+  
+  <h3>1. Implementasi PUT (Update Data)</h3>
+  <p>Buat route handler untuk <code>PUT /api/items/:id</code> yang melakukan hal berikut:</p>
+  <ul>
+    <li>Mencari barang di array <code>inventory</code> berdasarkan <code>req.params.id</code>.</li>
+    <li>Jika tidak ada, kembalikan status 404.</li>
+    <li>Jika ada, update <code>name</code> dan <code>stock</code> berdasarkan <code>req.body</code>.</li>
+    <li>Kembalikan objek yang sudah di-update dengan status 200.</li>
+  </ul>
+
+  <h3>2. Implementasi DELETE (Hapus Data)</h3>
+  <p>Buat route handler untuk <code>DELETE /api/items/:id</code> yang melakukan hal berikut:</p>
+  <ul>
+    <li>Mencari index barang di array.</li>
+    <li>Jika tidak ditemukan, kembalikan 404.</li>
+    <li>Jika ditemukan, hapus dari array menggunakan <code>Array.splice()</code> atau <code>Array.filter()</code>.</li>
+    <li>Kembalikan message sukses dengan status 200.</li>
+  </ul>
+
+  <h3>Contoh Interaksi</h3>
+  ${codeBlock('bash','// Update Data\ncurl -X PUT -H "Content-Type: application/json" -H "X-API-Key: erp123" -d \'{"name":"Mur M8 Baru", "stock":250}\' http://localhost:3000/api/items/BRG-001\n\n// Delete Data\ncurl -X DELETE -H "X-API-Key: erp123" http://localhost:3000/api/items/BRG-002')}
+
+  <h2>Kriteria Penilaian</h2>
+  <ul>
+    <li>PUT endpoint dapat mengupdate objek dengan benar</li>
+    <li>DELETE endpoint menghapus data dari array dengan sukses</li>
+    <li>Endpoint menangani kasus di mana ID tidak ditemukan (404)</li>
+    <li>API Key Middleware tetap berfungsi pada endpoint baru</li>
+  </ul>
+
+  <h2>Cara Pengumpulan</h2>
+  <p>Simpan kode lengkap Anda di file <code>app.js</code>, kompres, dan upload. Sertakan screenshot atau text output hasil curl / postman Anda.</p>
+</div>`;
+
+// ── MODULE 6 CONTENT ──
+CONTENT['m6-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#14B8A6">Module 6</span>
+  <h1 class="section-title">Lesson Plan — Praktik Bangun REST API CRUD</h1>
+  <p class="section-subtitle">Pertemuan 6 — Refactoring ke Model-Controller Pattern</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Memisahkan logika bisnis (Controller) dari definisi rute (Routes).</li>
+    <li>Menstrukturkan folder proyek backend yang skalabel (Folder-by-Feature atau Layered).</li>
+    <li>Mengimplementasikan pola CRUD lengkap (Create, Read, Update, Delete) dengan data in-memory / file.</li>
+    <li>Menerapkan error handling terpusat sederhana.</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>20 menit</td><td>Desain Struktur Folder & Konsep Controller</td></tr>
+    <tr><td>30 menit</td><td>Implementasi Rute & Controller: GET & POST (Read & Create)</td></tr>
+    <tr><td>30 menit</td><td>Implementasi Rute & Controller: PUT & DELETE (Update & Delete)</td></tr>
+    <tr><td>30 menit</td><td>Guided Lab: Membangun API Modul "Barang"</td></tr>
+    <tr><td>10 menit</td><td>Diskusi & Take-Home Assignment</td></tr>
+  </table>
+  
+  <h2>Studi Kasus ERP</h2>
+  <p>Di modul sebelumnya, seluruh kode route dan logika kita berada di file <code>app.js</code>. Untuk proyek skala Enterprise (ERP), kode yang terpusat di satu file akan menjadi mimpi buruk. Di modul ini, kita akan melakukan <strong>refactoring</strong> — memecah <code>app.js</code> menjadi struktur folder profesional (Routes, Controllers, Models) agar aplikasi ERP kita mudah dipelihara oleh tim.</p>
+</div>`;
+
+CONTENT['m6-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#14B8A6">Module 6 · Section A</span>
+  <h1 class="section-title">Struktur Proyek: Routes & Controllers</h1>
+  <p class="section-subtitle">Meninggalkan app.js monolitik</p>
+</div>
+<div class="content">
+  <h2>Kenapa Memecah Kode?</h2>
+  <p>Ketika endpoint bertambah, <code>app.js</code> Anda akan menjadi ratusan hingga ribuan baris kode. Konsep <strong>Separation of Concerns (SoC)</strong> mengharuskan kita memisahkan definisi URL (Routes) dari logika cara menanganinya (Controllers).</p>
+  
+  <h3>Struktur Folder Layered Architecture</h3>
+  <p>Ini adalah standar industri untuk backend Node.js non-framework (Express):</p>
+  ${codeBlock('bash','erp-backend/\n├── src/\n│   ├── controllers/\n│   │   └── itemController.js   # Logika bisnis\n│   ├── routes/\n│   │   └── itemRoutes.js       # Definisi endpoint (GET, POST)\n│   ├── models/\n│   │   └── itemModel.js        # Akses ke database (atau file)\n│   └── app.js                  # Setup Express server\n├── package.json\n└── server.js                   # Entry point aplikasi')}
+
+  <h2>Refactoring: app.js vs Express Router</h2>
+  ${sideBySide('Cara Lama (app.js)','// Semuanya tercampur\napp.get("/api/items", (req, res) => {\n  const data = [...]; // cari data\n  res.json(data);     // kembalikan\n});\n\napp.post("/api/items", (req, res) => {\n  const newItem = req.body;\n  // validasi, simpan...\n  res.json(newItem);\n});','Cara Baru (Express Router)','// routes/itemRoutes.js\nconst express = require("express");\nconst router = express.Router();\nconst itemController = require("../controllers/itemController");\n\nrouter.get("/", itemController.getAllItems);\nrouter.post("/", itemController.createItem);\n\nmodule.exports = router;')}
+
+  <p>Di file <code>app.js</code>, kita tinggal mengaitkan <em>router</em> tersebut ke base URL:</p>
+  ${codeBlock('javascript','// src/app.js\nconst express = require("express");\nconst itemRoutes = require("./routes/itemRoutes");\n\nconst app = express();\napp.use(express.json());\n\n// Semua rute di itemRoutes akan diawali dengan /api/items\napp.use("/api/items", itemRoutes);\n\nmodule.exports = app;')}
+
+  ${callout('instructor','Catatan Instruktur','Penting: Jelaskan bahwa <code>router.get("/", ...)</code> di dalam <code>itemRoutes.js</code> sebenarnya mewakili <code>/api/items/</code> karena kita menggunakan <code>app.use("/api/items", router)</code> di <code>app.js</code>. Ini adalah konsep sub-routing yang sangat kuat di Express.')}
+</div>`;
+
+CONTENT['m6-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#14B8A6">Module 6 · Section B</span>
+  <h1 class="section-title">Controller & Model: Read & Create</h1>
+  <p class="section-subtitle">Mengimplementasikan GET dan POST di Layer Terpisah</p>
+</div>
+<div class="content">
+  <h2>Membuat Model (Data Access Layer)</h2>
+  <p>Model bertanggung jawab murni untuk berurusan dengan data. Di sini, kita akan menggunakan in-memory array sebagai simulasi database.</p>
+  ${codeBlock('javascript','// src/models/itemModel.js\n\nlet inventory = [\n  { id: "BRG-001", name: "Mur M8", stock: 100 }\n];\n\n// Berikan fungsi-fungsi untuk memanipulasi data\nexports.findAll = () => {\n  return inventory;\n};\n\nexports.create = (itemData) => {\n  const newItem = { \n    id: itemData.id, \n    name: itemData.name, \n    stock: itemData.stock \n  };\n  inventory.push(newItem);\n  return newItem;\n};')}
+
+  <h2>Membuat Controller (Business Logic Layer)</h2>
+  <p>Controller menerima request dari user, memanggil Model, lalu merakit response.</p>
+  ${codeBlock('javascript','// src/controllers/itemController.js\nconst ItemModel = require("../models/itemModel");\n\nexports.getAllItems = (req, res) => {\n  try {\n    // 1. Ambil data dari model\n    const items = ItemModel.findAll();\n    \n    // 2. Kirim response\n    res.status(200).json({\n      success: true,\n      count: items.length,\n      data: items\n    });\n  } catch (err) {\n    res.status(500).json({ success: false, error: "Server Error" });\n  }\n};\n\nexports.createItem = (req, res) => {\n  try {\n    // 1. Validasi input\n    const { id, name, stock } = req.body;\n    if (!id || !name) {\n      return res.status(400).json({ success: false, error: "Tolong lengkapi data!" });\n    }\n    \n    // 2. Simpan via model\n    const newItem = ItemModel.create({ id, name, stock: stock || 0 });\n    \n    // 3. Kirim response sukses\n    res.status(201).json({ success: true, data: newItem });\n  } catch (err) {\n    res.status(500).json({ success: false, error: "Server Error" });\n  }\n};')}
+
+  ${quiz('q6b','Di mana seharusnya logika query database (contoh: INSERT INTO...) diletakkan dalam arsitektur MVC?',['Di dalam Routes (itemRoutes.js)','Di dalam App (app.js)','Di dalam Controllers (itemController.js)','Di dalam Models (itemModel.js)'],3,'Model adalah representasi data. Semua akses ke database harus diabstraksikan di dalam file Model. Controller memanggil method yang disediakan oleh Model.')}
+</div>`;
+
+CONTENT['m6-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#14B8A6">Module 6 · Section C</span>
+  <h1 class="section-title">Controller & Model: Update & Delete</h1>
+  <p class="section-subtitle">Mengimplementasikan PUT dan DELETE</p>
+</div>
+<div class="content">
+  <h2>Menambahkan Fungsi ke Model</h2>
+  <p>Kita tambahkan kemampuan mencari berdasar ID, mengupdate, dan menghapus di <code>itemModel.js</code>.</p>
+  ${codeBlock('javascript','// Tambahkan di src/models/itemModel.js\n\nexports.findById = (id) => {\n  return inventory.find(item => item.id === id);\n};\n\nexports.update = (id, updateData) => {\n  const index = inventory.findIndex(item => item.id === id);\n  if (index === -1) return null;\n  \n  inventory[index] = { ...inventory[index], ...updateData };\n  return inventory[index];\n};\n\nexports.delete = (id) => {\n  const index = inventory.findIndex(item => item.id === id);\n  if (index === -1) return false;\n  \n  inventory.splice(index, 1);\n  return true;\n};')}
+
+  <h2>Menambahkan Handler ke Controller</h2>
+  ${codeBlock('javascript','// Tambahkan di src/controllers/itemController.js\n\nexports.updateItem = (req, res) => {\n  const id = req.params.id;\n  \n  // Cek apakah ada\n  const item = ItemModel.findById(id);\n  if (!item) {\n    return res.status(404).json({ success: false, error: "Barang tidak ditemukan" });\n  }\n  \n  // Lakukan update\n  const updatedItem = ItemModel.update(id, req.body);\n  res.status(200).json({ success: true, data: updatedItem });\n};\n\nexports.deleteItem = (req, res) => {\n  const id = req.params.id;\n  \n  const isDeleted = ItemModel.delete(id);\n  if (!isDeleted) {\n    return res.status(404).json({ success: false, error: "Barang tidak ditemukan" });\n  }\n  \n  res.status(200).json({ success: true, data: {} });\n};')}
+
+  <h2>Mendaftarkan ke Router</h2>
+  ${codeBlock('javascript','// Di src/routes/itemRoutes.js\n\nrouter.put("/:id", itemController.updateItem);\nrouter.delete("/:id", itemController.deleteItem);')}
+  
+  ${callout('info','Response Format','Perhatikan bahwa kita selalu merespons dengan struktur JSON yang konsisten: <code>{ success: true/false, data: {...}, error: "..." }</code>. Ini membuat frontend (seperti React) sangat mudah mem-parsing API kita.')}
+</div>`;
+
+CONTENT['m6-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#14B8A6">Module 6 · Section D</span>
+  <h1 class="section-title">Guided Lab: Membangun Modul Karyawan</h1>
+  <p class="section-subtitle">Praktik arsitektur layered (Routes & Controllers)</p>
+</div>
+<div class="content">
+  <p>Anda telah melihat teori pemisahan modul "Barang" di bagian sebelumnya. Sekarang giliran Anda membangun modul "Karyawan" (Employees) untuk ERP Anda menggunakan pola yang sama.</p>
+
+  <div class="step-tracker" id="st-m6-d"></div>
+
+  ${stepCard(1,'Setup Struktur Folder',`
+    <p>Di terminal Anda, buat folder dan siapkan <code>package.json</code>:</p>
+    ${codeBlock('bash','mkdir erp-employees\ncd erp-employees\nnpm init -y\nnpm install express\nmkdir src src/controllers src/routes src/models')}
+  `,true)}
+
+  ${stepCard(2,'Buat Employee Model',`
+    <p>Buat <code>src/models/employeeModel.js</code>:</p>
+    ${codeBlock('javascript','let employees = [\n  { id: "EMP-01", name: "Budi", role: "Manager" }\n];\n\nexports.getAll = () => employees;\n\nexports.create = (emp) => {\n  employees.push(emp);\n  return emp;\n};')}
+  `)}
+
+  ${stepCard(3,'Buat Employee Controller',`
+    <p>Buat <code>src/controllers/employeeController.js</code>:</p>
+    ${codeBlock('javascript','const Employee = require("../models/employeeModel");\n\nexports.getEmployees = (req, res) => {\n  res.status(200).json({ success: true, data: Employee.getAll() });\n};\n\nexports.createEmployee = (req, res) => {\n  const newEmp = Employee.create(req.body);\n  res.status(201).json({ success: true, data: newEmp });\n};')}
+  `)}
+
+  ${stepCard(4,'Buat Router & Sambungkan ke App',`
+    <p>Buat <code>src/routes/employeeRoutes.js</code>:</p>
+    ${codeBlock('javascript','const express = require("express");\nconst router = express.Router();\nconst empController = require("../controllers/employeeController");\n\nrouter.get("/", empController.getEmployees);\nrouter.post("/", empController.createEmployee);\n\nmodule.exports = router;')}
+    
+    <p>Buat <code>server.js</code> di root folder:</p>
+    ${codeBlock('javascript','const express = require("express");\nconst empRoutes = require("./src/routes/employeeRoutes");\n\nconst app = express();\napp.use(express.json());\n\napp.use("/api/employees", empRoutes);\n\napp.listen(3000, () => {\n  console.log("Server ERP Karyawan jalan di port 3000");\n});')}
+  `)}
+
+  ${stepCard(5,'Jalankan dan Test',`
+    <p>Jalankan server dan coba akses API:</p>
+    ${codeBlock('bash','node server.js\n\n# Terminal lain\ncurl http://localhost:3000/api/employees')}
+  `)}
+</div>`;
+
+CONTENT['m6-e'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#14B8A6">Module 6 · Section E</span>
+  <h1 class="section-title">Take-Home: Lengkapi Modul Karyawan</h1>
+  <p class="section-subtitle">Tugas mandiri Update & Delete</p>
+</div>
+<div class="content">
+  <h2>Tugas</h2>
+  <p>Modul "Karyawan" yang dibuat di Guided Lab belum selesai. Tugas Anda adalah melengkapinya!</p>
+  
+  <h3>1. Model (employeeModel.js)</h3>
+  <p>Tambahkan method berikut:</p>
+  <ul>
+    <li><code>findById(id)</code> — mencari satu karyawan berdasar ID.</li>
+    <li><code>update(id, data)</code> — memperbarui data karyawan.</li>
+    <li><code>delete(id)</code> — menghapus karyawan dari array.</li>
+  </ul>
+
+  <h3>2. Controller (employeeController.js)</h3>
+  <p>Buat fungsi-fungsi handler berikut:</p>
+  <ul>
+    <li><code>getEmployeeById(req, res)</code> — gunakan parameter URL.</li>
+    <li><code>updateEmployee(req, res)</code> — gabungkan param ID dan Body.</li>
+    <li><code>deleteEmployee(req, res)</code> — tangani respons sukses dan gagal.</li>
+  </ul>
+
+  <h3>3. Routes (employeeRoutes.js)</h3>
+  <p>Daftarkan rute-rute baru (<code>/:id</code>) dengan HTTP Verbs yang benar (GET, PUT, DELETE).</p>
+
+  <h2>Format Output</h2>
+  <p>Pastikan API Anda merespons dengan format standar:</p>
+  ${codeBlock('json','{\n  "success": true,\n  "data": { ... }\n}')}
+
+  <h2>Cara Pengumpulan</h2>
+  <p>Kumpulkan folder <code>erp-employees/</code> (tanpa <code>node_modules</code>), jadikan ZIP dan upload ke LMS.</p>
+</div>`;
 
 
 
