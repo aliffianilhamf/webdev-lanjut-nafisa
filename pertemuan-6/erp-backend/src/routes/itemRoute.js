@@ -3,6 +3,14 @@ const router = express.Router();
 const itemController = require("../controllers/itemController");
 
 // GET all items
-router.get("/items", itemController.getAllItems);
+router.get("/", itemController.getAllItems);
+// GET item by ID
+router.get("/:id", itemController.getItemById);
+// POST create new item
+router.post("/", itemController.createItem);
+// PUT update item by ID
+router.put("/:id", itemController.updateItem);
+// DELETE item by ID
+router.delete("/:id", itemController.deleteItem);
 
 module.exports = router;

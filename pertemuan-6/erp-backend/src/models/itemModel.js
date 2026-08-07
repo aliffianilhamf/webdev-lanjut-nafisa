@@ -14,7 +14,7 @@ function add(item) {
     id: inventory.length + 1,
     name: item.name,
     price: item.price,
-    stock: item.stock,
+    stock: item.stock ? item.stock : 0,
   };
   inventory.push(newItem);
   return newItem;

@@ -49,6 +49,14 @@ const MODULES = [
     {id:'m6-c',label:'C. Update & Delete'},
     {id:'m6-d',label:'D. Guided Lab'},
     {id:'m6-e',label:'Take-Home'},
+  ]},
+  {id:'m7',label:'Module 7',color:'var(--m7)',colorBg:'var(--m7-light)',badgeColor:'#F43F5E',badge:'MongoDB & Mongoose CRUD',sections:[
+    {id:'m7-plan',label:'Lesson Plan'},
+    {id:'m7-a',label:'A. Intro MongoDB & Mongoose'},
+    {id:'m7-b',label:'B. Koneksi ke Database'},
+    {id:'m7-c',label:'C. Schema & Model'},
+    {id:'m7-d',label:'D. Praktik CRUD'},
+    {id:'m7-e',label:'Take-Home'},
   ]}
 ];
 const ALL_IDS = MODULES.flatMap(m=>m.sections.map(s=>s.id));
@@ -1872,7 +1880,197 @@ CONTENT['m6-e'] = `
   <p>Kumpulkan folder <code>erp-employees/</code> (tanpa <code>node_modules</code>), jadikan ZIP dan upload ke LMS.</p>
 </div>`;
 
+// ── MODULE 7 CONTENT ──
+CONTENT['m7-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F43F5E">Module 7</span>
+  <h1 class="section-title">Lesson Plan — Integrasi Express dengan MongoDB</h1>
+  <p class="section-subtitle">Pertemuan 7 — Beralih dari penyimpanan array lokal ke database NoSQL</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Memahami konsep dasar database NoSQL dan MongoDB</li>
+    <li>Mengenal ODM (Object Data Modeling) menggunakan Mongoose</li>
+    <li>Menghubungkan aplikasi Express.js ke database MongoDB</li>
+    <li>Membuat Schema dan Model untuk entitas data ERP</li>
+    <li>Mengganti implementasi CRUD lokal (array/file) dengan operasi database MongoDB</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>20 menit</td><td>Pengenalan MongoDB &amp; Mongoose</td></tr>
+    <tr><td>20 menit</td><td>Koneksi ke Database &amp; Variabel Lingkungan (.env)</td></tr>
+    <tr><td>20 menit</td><td>Mendefinisikan Schema &amp; Model (Data Barang ERP)</td></tr>
+    <tr><td>40 menit</td><td>Guided Lab: Merombak API menjadi MongoDB CRUD</td></tr>
+    <tr><td>20 menit</td><td>Diskusi, Q&amp;A, dan Take-Home</td></tr>
+  </table>
+  <h2>Kaitan dengan Studi Kasus ERP</h2>
+  <p>Hingga saat ini, data yang kita olah di aplikasi Express masih menggunakan array (in-memory) atau file lokal. Untuk sistem ERP nyata, pendekatan tersebut tidak skalabel dan rentan kehilangan data. Oleh karena itu, kita akan memigrasikan penyimpanan data produk manufaktur kita ke <strong>MongoDB</strong> — sebuah database yang populer karena skemanya yang fleksibel (NoSQL).</p>
+</div>`;
 
+CONTENT['m7-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F43F5E">Module 7 · Section A</span>
+  <h1 class="section-title">Intro MongoDB &amp; Mongoose</h1>
+  <p class="section-subtitle">Mengenal NoSQL, MongoDB, dan mengapa kita memakai Mongoose</p>
+</div>
+<div class="content">
+  <h2>Apa itu MongoDB?</h2>
+  <p>MongoDB adalah sistem database NoSQL yang menyimpan data dalam format dokumen mirip JSON (BSON). Jika Anda terbiasa dengan SQL (seperti MySQL atau PostgreSQL), berikut adalah perbandingannya:</p>
+  <table>
+    <tr><th>Konsep RDBMS (SQL)</th><th>Konsep MongoDB (NoSQL)</th></tr>
+    <tr><td>Database</td><td>Database</td></tr>
+    <tr><td>Table (Tabel)</td><td>Collection (Koleksi)</td></tr>
+    <tr><td>Row (Baris)</td><td>Document (Dokumen)</td></tr>
+    <tr><td>Column (Kolom)</td><td>Field</td></tr>
+  </table>
+  <p>Fleksibilitas NoSQL membuat pengembangan aplikasi JavaScript menjadi lebih cepat karena format dokumen MongoDB sangat identik dengan objek JSON.</p>
+  
+  <h2>Apa itu Mongoose?</h2>
+  <p><strong>Mongoose</strong> adalah library Node.js (Object Data Modeling / ODM) yang menyediakan solusi berbasis skema yang ketat (schema-based) untuk memodelkan data aplikasi Anda ke MongoDB.</p>
+  <p>Mengapa kita butuh Mongoose jika MongoDB bersifat schema-less (bebas)?</p>
+  <ul>
+    <li><strong>Validasi:</strong> Memastikan data produk selalu memiliki properti tertentu (misal: "nama" wajib ada dan "harga" harus angka).</li>
+    <li><strong>Pemodelan:</strong> Memberikan struktur yang jelas, auto-casting tipe data, dan middleware.</li>
+    <li><strong>Produktivitas:</strong> Membantu menulis query database dalam bentuk JavaScript yang lebih elegan.</li>
+  </ul>
+  
+  ${callout('info','Persiapan Lingkungan','Sebelum melanjutkan, pastikan Anda telah membuat akun di <strong>MongoDB Atlas</strong> (layanan cloud MongoDB gratis) atau telah menginstal MongoDB secara lokal di komputer Anda.')}
+</div>`;
+
+CONTENT['m7-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F43F5E">Module 7 · Section B</span>
+  <h1 class="section-title">Koneksi ke Database MongoDB</h1>
+  <p class="section-subtitle">Menyambungkan aplikasi Express ke MongoDB menggunakan Mongoose</p>
+</div>
+<div class="content">
+  <h2>Langkah 1: Instalasi Paket</h2>
+  <p>Pada proyek Anda, kita perlu menginstal <code>mongoose</code> dan <code>dotenv</code> (untuk menyimpan kredensial database agar aman).</p>
+  ${codeBlock('bash','npm install mongoose dotenv')}
+  
+  <h2>Langkah 2: Konfigurasi .env</h2>
+  <p>Buat file <code>.env</code> di root folder proyek Anda. File ini tidak boleh diunggah ke GitHub (tambahkan di .gitignore).</p>
+  ${codeBlock('bash','PORT=3000\nMONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/erp_db?retryWrites=true&w=majority')}
+  
+  <h2>Langkah 3: File Koneksi (config/db.js)</h2>
+  <p>Sangat disarankan untuk memisahkan kode koneksi database ke dalam file tersendiri agar kode kita tetap <em>modular</em>.</p>
+  ${codeBlock('javascript','// config/db.js\nconst mongoose = require(\'mongoose\');\n\nconst connectDB = async () => {\n  try {\n    // Menyambungkan Mongoose ke MongoDB menggunakan URL dari file .env\n    const conn = await mongoose.connect(process.env.MONGO_URI);\n    console.log(`MongoDB Connected: ${conn.connection.host}`);\n  } catch (error) {\n    console.error(`Error connecting to MongoDB: ${error.message}`);\n    process.exit(1); // Keluar dari proses jika koneksi gagal\n  }\n};\n\nmodule.exports = connectDB;')}
+  
+  <h2>Langkah 4: Panggil di app.js</h2>
+  <p>Sekarang, impor fungsi <code>connectDB</code> ke file utama Anda dan panggil sebelum menjalankan server.</p>
+  ${codeBlock('javascript','// app.js\nrequire(\'dotenv\').config(); // Load variabel lingkungan\nconst express = require(\'express\');\nconst connectDB = require(\'./config/db\');\n\n// Panggil fungsi koneksi database\nconnectDB();\n\nconst app = express();\napp.use(express.json());\n\n// Route sederhana\napp.get(\'/api/status\', (req, res) => {\n  res.json({ message: "Server & Database berjalan lancar" });\n});\n\nconst PORT = process.env.PORT || 3000;\napp.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));')}
+</div>`;
+
+CONTENT['m7-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F43F5E">Module 7 · Section C</span>
+  <h1 class="section-title">Schema &amp; Model Mongoose</h1>
+  <p class="section-subtitle">Mendefinisikan struktur data produk manufaktur di MongoDB</p>
+</div>
+<div class="content">
+  <h2>Mendefinisikan Schema</h2>
+  <p>Dalam Mongoose, <strong>Schema</strong> adalah blueprint yang menentukan properti dan tipe data dokumen di dalam koleksi. Sedangkan <strong>Model</strong> adalah <em>wrapper</em> dari Schema yang menyediakan fungsi untuk berinteraksi dengan database (CRUD).</p>
+  <p>Buat folder <code>models</code> dan buat file <code>Product.js</code> untuk menyimpan Schema produk gudang (ERP).</p>
+  ${codeBlock('javascript','// models/Product.js\nconst mongoose = require(\'mongoose\');\n\nconst productSchema = new mongoose.Schema({\n  nama: {\n    type: String,\n    required: [true, \'Nama produk harus diisi\'],\n    trim: true\n  },\n  kategori: {\n    type: String,\n    enum: [\'Raw Material\', \'Work in Progress\', \'Finished Goods\'],\n    default: \'Raw Material\'\n  },\n  stok: {\n    type: Number,\n    required: true,\n    min: [0, \'Stok tidak boleh negatif\']\n  },\n  harga: {\n    type: Number,\n    required: true\n  }\n}, {\n  timestamps: true // Otomatis menambahkan field createdAt dan updatedAt\n});\n\n// Membuat model dari schema\nconst Product = mongoose.model(\'Product\', productSchema);\nmodule.exports = Product;')}
+  
+  <h2>Penjelasan Properti Schema:</h2>
+  <ul>
+    <li><strong>type:</strong> Tipe data (String, Number, Date, Boolean, dll).</li>
+    <li><strong>required:</strong> Validasi; akan melempar error jika field ini kosong.</li>
+    <li><strong>trim:</strong> Menghapus spasi di awal/akhir string.</li>
+    <li><strong>enum:</strong> Membatasi nilai yang diperbolehkan hanya yang ada dalam array.</li>
+    <li><strong>min:</strong> Validasi angka minimum (cocok untuk stok).</li>
+    <li><strong>timestamps:</strong> Mongoose akan mengelola waktu pembuatan dan update dokumen.</li>
+  </ul>
+  
+  ${callout('warning','Perhatian Penamaan Model','Secara konvensi, nama Model Mongoose adalah kata tunggal berawalan huruf kapital (misal: <code>Product</code>). Mongoose secara otomatis akan mencari koleksi MongoDB dalam bentuk jamak (plural) dan huruf kecil (menjadi <code>products</code>).')}
+</div>`;
+
+CONTENT['m7-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F43F5E">Module 7 · Section D</span>
+  <h1 class="section-title">Praktik CRUD dengan Mongoose</h1>
+  <p class="section-subtitle">Mengganti array statis dengan operasi database nyata</p>
+</div>
+<div class="content">
+  <p>Dengan Model <code>Product</code> yang telah dibuat, mari kita rombak controller kita (misal: <code>controllers/productController.js</code>) yang sebelumnya menggunakan array, menjadi menggunakan query Mongoose.</p>
+  
+  <h2>1. Create (POST) - Menyimpan Data Baru</h2>
+  <p>Untuk menyimpan dokumen, kita bisa menggunakan <code>Model.create()</code>.</p>
+  ${codeBlock('javascript','const Product = require(\'../models/Product\');\n\nexports.createProduct = async (req, res) => {\n  try {\n    const product = await Product.create(req.body);\n    res.status(201).json({\n      success: true,\n      data: product\n    });\n  } catch (error) {\n    res.status(400).json({ success: false, message: error.message });\n  }\n};')}
+  
+  <h2>2. Read (GET) - Mengambil Data</h2>
+  <p>Untuk membaca semua data gunakan <code>Model.find()</code>. Untuk membaca berdasarkan ID gunakan <code>Model.findById()</code>.</p>
+  ${codeBlock('javascript','// Ambil semua produk\nexports.getAllProducts = async (req, res) => {\n  try {\n    const products = await Product.find();\n    res.status(200).json({ success: true, count: products.length, data: products });\n  } catch (error) {\n    res.status(500).json({ success: false, message: "Terjadi kesalahan server" });\n  }\n};\n\n// Ambil 1 produk by ID\nexports.getProductById = async (req, res) => {\n  try {\n    const product = await Product.findById(req.params.id);\n    if (!product) {\n      return res.status(404).json({ success: false, message: "Produk tidak ditemukan" });\n    }\n    res.status(200).json({ success: true, data: product });\n  } catch (error) {\n    res.status(400).json({ success: false, message: "ID tidak valid" });\n  }\n};')}
+  
+  <h2>3. Update (PUT) - Memperbarui Data</h2>
+  <p>Gunakan <code>Model.findByIdAndUpdate()</code>.</p>
+  ${codeBlock('javascript','exports.updateProduct = async (req, res) => {\n  try {\n    // Opsi new: true akan mengembalikan dokumen hasil update, bukan dokumen sebelum update\n    // Opsi runValidators: true akan menjalankan validasi mongoose pada field yang diupdate\n    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {\n      new: true,\n      runValidators: true\n    });\n\n    if (!product) {\n      return res.status(404).json({ success: false, message: "Produk tidak ditemukan" });\n    }\n\n    res.status(200).json({ success: true, data: product });\n  } catch (error) {\n    res.status(400).json({ success: false, message: error.message });\n  }\n};')}
+  
+  <h2>4. Delete (DELETE) - Menghapus Data</h2>
+  <p>Gunakan <code>Model.findByIdAndDelete()</code>.</p>
+  ${codeBlock('javascript','exports.deleteProduct = async (req, res) => {\n  try {\n    const product = await Product.findByIdAndDelete(req.params.id);\n    if (!product) {\n      return res.status(404).json({ success: false, message: "Produk tidak ditemukan" });\n    }\n    res.status(200).json({ success: true, data: {} });\n  } catch (error) {\n    res.status(400).json({ success: false, message: "ID tidak valid" });\n  }\n};')}
+  
+  ${callout('info','Catatan Asynchronous','Ingat, operasi database (I/O) selalu bersifat <em>asynchronous</em> (membutuhkan waktu tunggu). Karena itulah kita selalu menggunakan <code>async/await</code> dalam fungsi controller ini.')}
+</div>`;
+
+CONTENT['m7-e'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#F43F5E">Module 7 · Section E</span>
+  <h1 class="section-title">Take-Home: Migrasi API Karyawan ke MongoDB</h1>
+  <p class="section-subtitle">Tugas mandiri — menerapkan MongoDB ke modul Employee ERP</p>
+</div>
+<div class="content">
+  <h2>Latar Belakang</h2>
+  <p>Pada tugas sebelumnya (Module 6), Anda telah membuat API CRUD untuk entitas Karyawan (Employee) menggunakan array lokal (in-memory). Sekarang, tim infrastruktur PT. Nafisa meminta Anda untuk memigrasikan penyimpanan data karyawan tersebut menggunakan <strong>MongoDB</strong> agar data tidak hilang ketika server restart.</p>
+
+  <h2>Tugas</h2>
+  <p>Ubah modul Employee yang sudah Anda buat sebelumnya dengan menambahkan Mongoose.</p>
+  
+  <h3>1. Konfigurasi Database</h3>
+  <ul>
+    <li>Buat database MongoDB Atlas, dapatkan connection string Anda.</li>
+    <li>Buat file <code>.env</code> untuk menyimpan URL database dan port.</li>
+    <li>Implementasikan koneksi Mongoose di <code>app.js</code> atau <code>config/db.js</code>.</li>
+  </ul>
+
+  <h3>2. Buat Schema dan Model (Employee)</h3>
+  <p>Buat file <code>models/Employee.js</code>. Skema Karyawan harus memiliki kriteria berikut:</p>
+  <ul>
+    <li><code>nama</code> (String) - wajib diisi.</li>
+    <li><code>email</code> (String) - wajib diisi, pastikan tipe datanya string.</li>
+    <li><code>posisi</code> (String) - wajib diisi.</li>
+    <li><code>gaji</code> (Number) - wajib diisi, tidak boleh di bawah 0.</li>
+  </ul>
+  <p>Jangan lupa tambahkan <code>timestamps: true</code> pada konfigurasi Schema.</p>
+
+  <h3>3. Rombak Controllers</h3>
+  <p>Ubah seluruh controller di <code>employeeController.js</code> agar menggunakan Mongoose Model (<code>Employee.find</code>, <code>Employee.create</code>, dll), alih-alih array push/splice.</p>
+  
+  <h3>4. Uji Coba dengan Postman / Insomnia</h3>
+  <p>Pastikan API endpoint berikut berjalan 100% menggunakan database MongoDB:</p>
+  <ul>
+    <li><strong>GET</strong> /api/employees</li>
+    <li><strong>POST</strong> /api/employees</li>
+    <li><strong>GET</strong> /api/employees/:id</li>
+    <li><strong>PUT</strong> /api/employees/:id</li>
+    <li><strong>DELETE</strong> /api/employees/:id</li>
+  </ul>
+
+  <h2>Kriteria Penilaian</h2>
+  <ul>
+    <li>File <code>.env</code> digunakan untuk variabel environment.</li>
+    <li>Koneksi MongoDB berhasil dan error handling ditangani dengan benar.</li>
+    <li>Schema Mongoose mendefinisikan tipe data dan validasi yang sesuai.</li>
+    <li>Semua fungsi CRUD berjalan asinkronus (async/await) dan tersimpan permanen di database.</li>
+  </ul>
+
+  <h2>Cara Pengumpulan</h2>
+  <p>Kumpulkan folder <code>erp-employees-mongo/</code>. Pastikan Anda <strong>TIDAK MENGIRIM</strong> folder <code>node_modules</code>. Sertakan file <code>.env.example</code> (tanpa password asli Anda) di dalam ZIP.</p>
+</div>`;
 
 function placeholder(mod,badge){
   var desc = arguments.length>2 ? arguments[2] : 'Konten akan segera dilengkapi.';

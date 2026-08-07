@@ -8,7 +8,7 @@ const PORT = 3000;
 app.use(express.json());
 
 // Use the itemRoute for handling item-related routes
-app.use("/api", itemRoute);
+app.use("/api/items", itemRoute);
 
 // Start the server
 app.listen(PORT, () => {
