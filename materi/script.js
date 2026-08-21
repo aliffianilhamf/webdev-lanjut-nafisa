@@ -57,6 +57,37 @@ const MODULES = [
     {id:'m7-c',label:'C. Schema & Model'},
     {id:'m7-d',label:'D. Praktik CRUD'},
     {id:'m7-e',label:'Take-Home'},
+  ]},
+  {id:'m8',label:'Module 8',color:'var(--m1)',colorBg:'var(--m1-light)',badgeColor:'#2563EB',badge:'ERP Database & Product CRUD',sections:[
+    {id:'m8-plan',label:'Lesson Plan'},
+    {id:'m8-a',label:'A. Database Schema Design'},
+    {id:'m8-b',label:'B. Express Routes & Controllers'},
+    {id:'m8-c',label:'C. Guided Lab - Product CRUD'},
+    {id:'m8-d',label:'D. Take-Home'},
+  ]},
+  {id:'m9',label:'Module 9',color:'var(--m2)',colorBg:'var(--m2-light)',badgeColor:'#059669',badge:'Frontend ES6 & React Prep',sections:[
+    {id:'m9-plan',label:'Lesson Plan'},
+    {id:'m9-a',label:'A. ES6: Template Literals & Ternary'},
+    {id:'m9-b',label:'B. Destructuring & Default Params'},
+    {id:'m9-c',label:'C. Spread, Rest & Array Methods'},
+    {id:'m9-d',label:'D. Guided Lab'},
+    {id:'m9-e',label:'Take-Home'}
+  ]},
+  {id:'m10',label:'Module 10',color:'var(--m3)',colorBg:'var(--m3-light)',badgeColor:'#7C3AED',badge:'React Setup & Functional Components',sections:[
+    {id:'m10-plan',label:'Lesson Plan'},
+    {id:'m10-a',label:'A. Async/Await & API Calls'},
+    {id:'m10-b',label:'B. Setup React (Vite)'},
+    {id:'m10-c',label:'C. Functional vs Class Components'},
+    {id:'m10-d',label:'D. Props & Reusable Components'},
+    {id:'m10-e',label:'E. Guided Lab & Take-Home'}
+  ]},
+  {id:'m11',label:'Module 11',color:'var(--m4)',colorBg:'var(--m4-light)',badgeColor:'#EC4899',badge:'React UI: Lists, Styling & Conditional',sections:[
+    {id:'m11-plan',label:'Lesson Plan'},
+    {id:'m11-a',label:'A. Nested Components'},
+    {id:'m11-b',label:'B. Lists & Keys'},
+    {id:'m11-c',label:'C. Styling di React'},
+    {id:'m11-d',label:'D. Conditional Rendering'},
+    {id:'m11-e',label:'E. Guided Lab & Take-Home'}
   ]}
 ];
 const ALL_IDS = MODULES.flatMap(m=>m.sections.map(s=>s.id));
@@ -2070,6 +2101,751 @@ CONTENT['m7-e'] = `
 
   <h2>Cara Pengumpulan</h2>
   <p>Kumpulkan folder <code>erp-employees-mongo/</code>. Pastikan Anda <strong>TIDAK MENGIRIM</strong> folder <code>node_modules</code>. Sertakan file <code>.env.example</code> (tanpa password asli Anda) di dalam ZIP.</p>
+</div>`;
+
+// ── MODULE 8 CONTENT ──
+CONTENT['m8-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#2563EB">Module 8</span>
+  <h1 class="section-title">Lesson Plan — Desain Database ERP & CRUD Product</h1>
+  <p class="section-subtitle">Pertemuan 8 — Schema Design untuk ERP (Products, Categories, StockTransactions)</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Merancang schema MongoDB untuk entitas ERP (Categories, Products, StockTransactions)</li>
+    <li>Memahami hubungan antar entitas (reference population) di MongoDB</li>
+    <li>Membangun struktur folder untuk aplikasi Express (models, controllers, routes)</li>
+    <li>Mengimplementasikan CRUD lengkap untuk Product dengan filter berdasarkan type dan category</li>
+    <li>Menangani perbedaan antara Raw Material dan Finished Goods dalam database</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>25 menit</td><td>Desain Database Schema — Categories, Products, StockTransactions</td></tr>
+    <tr><td>20 menit</td><td>Express Structure — Models, Controllers, Routes Pattern</td></tr>
+    <tr><td>30 menit</td><td>Praktik Product CRUD dengan Filtering</td></tr>
+    <tr><td>30 menit</td><td>Guided Lab: Complete ERP Module dengan Stock Transactions</td></tr>
+    <tr><td>15 menit</td><td>Diskusi &amp; Pengantar Take-Home</td></tr>
+  </table>
+  <h2>Kaitan dengan Studi Kasus ERP</h2>
+  <p>Sampai pertemuan 7, kita telah mempelajari CRUD dasar dengan MongoDB. Di pertemuan 8 ini, kita akan membangun <strong>modul master data produk</strong> yang merupakan inti dari sistem ERP manufaktur. Modul ini menangani:</p>
+  <ul>
+    <li><strong>Categories</strong> — pengelompokan produk (raw material vs finished goods)</li>
+    <li><strong>Products</strong> — master data produk dengan dua tipe: raw material dan finished goods</li>
+    <li><strong>StockTransactions</strong> — tracking pergerakan stok (barang masuk, keluar, adjustment)</li>
+  </ul>
+  <p>Schema yang dirancang akan mendukung seluruh operasional produksi dan gudang PT. Nafisa Manufacturing.</p>
+</div>`;
+
+CONTENT['m8-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#2563EB">Module 8 · Section A</span>
+  <h1 class="section-title">Database Schema Design — ERP</h1>
+  <p class="section-subtitle">Desain struktur data untuk Categories, Products, dan StockTransactions</p>
+</div>
+<div class="content">
+  <h2>Pendekatan MongoDB & Mongoose</h2>
+  <p>MongoDB adalah database NoSQL yang menyimpan data dalam format dokumen BSON (Binary JSON). Tidak seperti SQL yang menggunakan tabel, MongoDB menggunakan <strong>collections</strong> untuk mengelompokkan dokumen.</p>
+  <p>Dalam Mongoose (ODM untuk MongoDB), kita mendefinisikan <strong>Schema</strong> untuk memvalidasi dan mengatur struktur dokumen, lalu membuat <strong>Model</strong> untuk berinteraksi dengan database.</p>
+  
+  <h3>1. Schema Categories</h3>
+  <p>Categories digunakan untuk mengelompokkan produk. Setiap produk harus terkait dengan satu category.</p>
+  ${codeBlock('javascript','// models/Category.js\nconst mongoose = require("mongoose");\n\nconst categorySchema = new mongoose.Schema({\n  name: {\n    type: String,\n    required: [true, "Nama kategori wajib diisi"],\n    trim: true,\n    unique: true,\n    maxlength: [100, "Nama kategori maksimal 100 karakter"],\n  },\n  description: {\n    type: String,\n    trim: true,\n    maxlength: [500, "Deskripsi maksimal 500 karakter"],\n  },\n  type: {\n    type: String,\n    enum: ["raw_material", "finished_goods", "other"],\n    default: "other",\n  },\n  isActive: {\n    type: Boolean,\n    default: true,\n  },\n}, {\n  timestamps: true,\n});\n\nmodule.exports = mongoose.model("Category", categorySchema);')}
+  
+  <h3>2. Schema Products</h3>
+  <p>Products adalah entitas utama. Dalam ERP manufaktur, ada dua tipe produk: <strong>Raw Material</strong> (bahan baku) dan <strong>Finished Goods</strong> (barang jadi).</p>
+  ${codeBlock('javascript','// models/Product.js\nconst mongoose = require("mongoose");\n\nconst productSchema = new mongoose.Schema({\n  code: {\n    type: String,\n    required: [true, "Kode produk wajib diisi"],\n    trim: true,\n    unique: true,\n  },\n  name: {\n    type: String,\n    required: [true, "Nama produk wajib diisi"],\n    trim: true,\n  },\n  description: {\n    type: String,\n    trim: true,\n  },\n  category: {\n    type: mongoose.Schema.Types.ObjectId,\n    ref: "Category",\n    required: [true, "Kategori produk wajib diisi"],\n  },\n  type: {\n    type: String,\n    enum: ["raw_material", "finished_goods"],\n    required: [true, "Jenis produk wajib diisi"],\n  },\n  sku: {\n    type: String,\n    trim: true,\n  },\n  unit: {\n    type: String,\n    required: [true, "Satuan wajib diisi"],\n    default: "pcs",\n  },\n  price: {\n    type: Number,\n    required: [true, "Harga wajib diisi"],\n    min: [0, "Harga tidak boleh negatif"],\n  },\n  minStock: {\n    type: Number,\n    default: 0,\n    min: [0, "Stok minimum tidak boleh negatif"],\n  },\n  isActive: {\n    type: Boolean,\n    default: true,\n  },\n}, {\n  timestamps: true,\n});\n\nmodule.exports = mongoose.model("Product", productSchema);')}
+  
+  <h3>3. Schema StockTransactions</h3>
+  <p>StockTransactions digunakan untuk melacak pergerakan stok. Tipe transaksi: <strong>in</strong> (barang masuk), <strong>out</strong> (barang keluar), <strong>adjustment</strong> (penyesuaian stok).</p>
+  ${codeBlock('javascript','// models/StockTransaction.js\nconst mongoose = require("mongoose");\n\nconst stockTransactionSchema = new mongoose.Schema({\n  product: {\n    type: mongoose.Schema.Types.ObjectId,\n    ref: "Product",\n    required: [true, "Produk wajib diisi"],\n  },\n  type: {\n    type: String,\n    enum: ["in", "out", "adjustment"],\n    required: [true, "Jenis transaksi wajib diisi"],\n  },\n  quantity: {\n    type: Number,\n    required: [true, "Jumlah wajib diisi"],\n    min: [1, "Jumlah harus lebih dari 0"],\n  },\n  referenceNo: {\n    type: String,\n    trim: true,\n  },\n  notes: {\n    type: String,\n    trim: true,\n  },\n  processedBy: {\n    type: String,\n    trim: true,\n  },\n}, {\n  timestamps: true,\n});\n\nmodule.exports = mongoose.model("StockTransaction", stockTransactionSchema);')}
+  
+  <p><strong>Relationship & Population:</strong></p>
+  ${codeBlock('javascript','// Ambil semua produk dengan detail category\nconst products = await Product.find({}).populate("category");\n\n// Ambil semua transaksi dengan detail produk dan category\nconst transactions = await StockTransaction.find({})\n  .populate({\n    path: "product",\n    populate: {\n      path: "category",\n    },\n  });')}
+</div>`;
+
+CONTENT['m8-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#2563EB">Module 8 · Section B</span>
+  <h1 class="section-title">Express Routes & Controllers — ERP Structure</h1>
+  <p class="section-subtitle">Membangun struktur folder dan implementasi CRUD untuk ERP</p>
+</div>
+<div class="content">
+  <h2>Struktur Folder</h2>
+  <p>Ikuti pola layered architecture untuk scalability:</p>
+  ${codeBlock('bash','erp-backend/\n├── config/\n│   └── db.js\n├── src/\n│   ├── models/\n│   │   ├── Category.js\n│   │   ├── Product.js\n│   │   └── StockTransaction.js\n│   ├── controllers/\n│   │   ├── categoryController.js\n│   │   ├── productController.js\n│   │   └── stockTransactionController.js\n│   ├── routes/\n│   │   ├── categoryRoutes.js\n│   │   ├── productRoutes.js\n│   │   └── stockTransactionRoutes.js\n│   └── server.js\n├── package.json\n└── .env')}
+  
+  <h3>Config Database (config/db.js)</h3>
+  ${codeBlock('javascript','require("dotenv").config();\nconst mongoose = require("mongoose");\n\nconst connectDB = async () => {\n  try {\n    const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/erp_db";\n    await mongoose.connect(uri, { dbName: "erp_db" });\n    console.log("MongoDB connected successfully");\n  } catch (error) {\n    console.error("MongoDB connection error:", error.message);\n    process.exit(1);\n  }\n};\n\nmodule.exports = connectDB;')}
+  
+  <h3>Server Entry Point (src/server.js)</h3>
+  ${codeBlock('javascript','require("dotenv").config();\nconst express = require("express");\nconst connectDB = require("./config/db");\nconst categoryRoutes = require("./src/routes/categoryRoutes");\nconst productRoutes = require("./src/routes/productRoutes");\nconst stockTransactionRoutes = require("./src/routes/stockTransactionRoutes");\n\nconst app = express();\nconst PORT = process.env.PORT || 3000;\n\nconnectDB();\napp.use(express.json());\napp.use("/api/categories", categoryRoutes);\napp.use("/api/products", productRoutes);\napp.use("/api/stock-transactions", stockTransactionRoutes);\n\napp.listen(PORT, () => {\n  console.log(`Server is running on http://localhost:${PORT}`);\n});')}
+  
+  <h2>Controller Pattern</h2>
+  <p>Controller bertanggung jawab menangani request dan mengirim response dengan struktur yang konsisten:</p>
+  ${codeBlock('javascript','const Product = require("../models/Product");\nconst Category = require("../models/Category");\n\nconst getProducts = async (req, res) => {\n  try {\n    const { type, category, isActive } = req.query;\n    const filter = {};\n    if (type) filter.type = type;\n    if (category) filter.category = category;\n    if (isActive !== undefined) filter.isActive = isActive === "true";\n    \n    const products = await Product.find(filter).populate("category");\n    res.status(200).json({\n      success: true,\n      message: "Berhasil mendapatkan semua produk",\n      count: products.length,\n      data: products,\n    });\n  } catch (error) {\n    res.status(500).json({\n      success: false,\n      message: error.message,\n    });\n  }\n};\n\nconst createProduct = async (req, res) => {\n  try {\n    const { code, name, category, type, price } = req.body;\n    if (!code || !name || !category || !type || !price) {\n      return res.status(400).json({ success: false, message: "Field wajib diisi" });\n    }\n    const product = await Product.create({ code, name, category, type, price });\n    res.status(201).json({ success: true, data: product });\n  } catch (error) {\n    res.status(500).json({ success: false, message: error.message });\n  }\n};\n\nmodule.exports = { getProducts, createProduct };')}
+</div>`;
+
+CONTENT['m8-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#2563EB">Module 8 · Section C</span>
+  <h1 class="section-title">Guided Lab — Product CRUD dengan Filtering</h1>
+  <p class="section-subtitle">Membangun API lengkap untuk Category, Product, dan StockTransaction</p>
+</div>
+<div class="content">
+  <p>Pada lab ini, Anda akan membangun REST API untuk modul master data produk ERP dengan MongoDB.</p>
+  
+  <div class="step-tracker" id="st-m8-c"></div>
+  
+  ${stepCard(1,'Setup Project MongoDB',`
+    <p>Buat folder dan instal dependencies:</p>
+    ${codeBlock('bash','mkdir erp-mongodb\ncd erp-mongodb\nnpm init -y\nnpm install express mongoose dotenv\nnpm install --save-dev nodemon')}
+    <p>Buat file <code>.env</code> dengan konfigurasi:</p>
+    ${codeBlock('bash','PORT=3000\nMONGODB_URI=mongodb://localhost:27017/erp_db\nNODE_ENV=development')}
+  `,true)}
+  
+  ${stepCard(2,'Buat Models',`
+    <p>Buat folder <code>src/models/</code> dan buat 3 schema file:</p>
+    ${codeBlock('javascript','// src/models/Category.js\nconst mongoose = require("mongoose");\n\nconst categorySchema = new mongoose.Schema({\n  name: { type: String, required: true, unique: true },\n  description: String,\n  type: { type: String, enum: ["raw_material", "finished_goods", "other"], default: "other" },\n  isActive: { type: Boolean, default: true },\n}, { timestamps: true });\n\nmodule.exports = mongoose.model("Category", categorySchema);')}
+    ${codeBlock('javascript','// src/models/Product.js\nconst mongoose = require("mongoose");\n\nconst productSchema = new mongoose.Schema({\n  code: { type: String, required: true, unique: true },\n  name: { type: String, required: true },\n  description: String,\n  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },\n  type: { type: String, enum: ["raw_material", "finished_goods"], required: true },\n  sku: String,\n  unit: { type: String, default: "pcs" },\n  price: { type: Number, required: true, min: 0 },\n  minStock: { type: Number, default: 0 },\n  isActive: { type: Boolean, default: true },\n}, { timestamps: true });\n\nmodule.exports = mongoose.model("Product", productSchema);')}
+    ${codeBlock('javascript','// src/models/StockTransaction.js\nconst mongoose = require("mongoose");\n\nconst stockTransactionSchema = new mongoose.Schema({\n  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },\n  type: { type: String, enum: ["in", "out", "adjustment"], required: true },\n  quantity: { type: Number, required: true, min: 1 },\n  referenceNo: String,\n  notes: String,\n  processedBy: String,\n}, { timestamps: true });\n\nmodule.exports = mongoose.model("StockTransaction", stockTransactionSchema);')}
+  `,true)}
+  
+  ${stepCard(3,'Buat Controllers',`
+    <p>Buat folder <code>src/controllers/</code> dan buat controller untuk Product:</p>
+    ${codeBlock('javascript','const Product = require("../models/Product");\nconst Category = require("../models/Category");\n\nconst getProducts = async (req, res) => {\n  try {\n    const { type, category, isActive } = req.query;\n    const filter = {};\n    if (type) filter.type = type;\n    if (category) filter.category = category;\n    if (isActive !== undefined) filter.isActive = isActive === "true";\n    \n    const products = await Product.find(filter).populate("category");\n    res.status(200).json({ success: true, data: products });\n  } catch (error) {\n    res.status(500).json({ success: false, message: error.message });\n  }\n};\n\nconst createProduct = async (req, res) => {\n  try {\n    const { code, name, category, type, price } = req.body;\n    if (!code || !name || !category || !type || !price) {\n      return res.status(400).json({ success: false, message: "Field wajib diisi" });\n    }\n    const product = await Product.create({ code, name, category, type, price });\n    res.status(201).json({ success: true, data: product });\n  } catch (error) {\n    res.status(500).json({ success: false, message: error.message });\n  }\n};\n\nmodule.exports = { getProducts, createProduct };')}
+  `,true)}
+  
+  ${stepCard(4,'Buat Routes',`
+    <p>Buat folder <code>src/routes/</code> dan buat routes:</p>
+    ${codeBlock('javascript','// src/routes/productRoutes.js\nconst express = require("express");\nconst router = express.Router();\nconst productController = require("../controllers/productController");\n\nrouter.get("/", productController.getProducts);\nrouter.post("/", productController.createProduct);\n\nmodule.exports = router;')}
+    ${codeBlock('javascript','// src/routes/categoryRoutes.js\nconst express = require("express");\nconst router = express.Router();\nconst categoryController = require("../controllers/categoryController");\n\nrouter.get("/", categoryController.getCategories);\nrouter.post("/", categoryController.createCategory);\nrouter.put("/:id", categoryController.updateCategory);\nrouter.delete("/:id", categoryController.deleteCategory);\n\nmodule.exports = router;')}
+  `,true)}
+  
+  ${stepCard(5,'Testing API dengan cURL',`
+    <p>Jalankan server dan test endpoints:</p>
+    ${codeBlock('bash','node src/server.js\n\n# Test GET semua produk\ncurl http://localhost:3000/api/products\n\n# Test GET dengan filter\ncurl "http://localhost:3000/api/products?type=raw_material"\ncurl "http://localhost:3000/api/products?category=60d5f3a9b8c7d6e5f4a3b2c1"\n\n# Test POST produk baru\ncurl -X POST http://localhost:3000/api/products \\\n  -H "Content-Type: application/json" \\\n  -d \'{"code":"RM-001","name":"Mur M8","category":"60d5f3a9b8c7d6e5f4a3b2c1","type":"raw_material","price":25000}\'')}
+  `,true)}
+  
+  ${callout('info','Filtering Best Practices','Gunakan query parameters untuk filtering: <br>• <code>?type=raw_material</code> — filter berdasarkan tipe produk<br>• <code>?category=id</code> — filter berdasarkan category (ObjectId)<br>• <code>?isActive=true</code> — filter produk aktif saja')}
+</div>`;
+
+CONTENT['m8-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#2563EB">Module 8 · Section D</span>
+  <h1 class="section-title">Take-Home — Complete ERP Module</h1>
+  <p class="section-subtitle">Tugas mandiri — Complete Category, Product, dan StockTransaction CRUD</p>
+</div>
+<div class="content">
+  <h2>Tugas</h2>
+  <p>Lengkapi sistem ERP dengan modul lengkap untuk Categories, Products, dan StockTransactions.</p>
+  
+  <h3>1. Category CRUD</h3>
+  <p>Implementasi CRUD lengkap untuk category di <code>categoryController.js</code> dan <code>categoryRoutes.js</code>.</p>
+  <ul>
+    <li><code>GET /api/categories</code> — ambil semua categories</li>
+    <li><code>GET /api/categories/:id</code> — ambil category by ID</li>
+    <li><code>POST /api/categories</code> — create category baru</li>
+    <li><code>PUT /api/categories/:id</code> — update category</li>
+    <li><code>DELETE /api/categories/:id</code> — delete category</li>
+  </ul>
+  
+  <h3>2. StockTransaction CRUD</h3>
+  <p>Implementasi CRUD untuk stock transactions di <code>stockTransactionController.js</code> dan <code>stockTransactionRoutes.js</code>.</p>
+  <ul>
+    <li><code>POST /api/stock-transactions</code> — create stock transaction baru</li>
+    <li><code>GET /api/stock-transactions</code> — ambil semua transactions</li>
+    <li><code>GET /api/stock-transactions/:id</code> — ambil transaction by ID</li>
+  </ul>
+  
+  <h3>3. Validasi dan Error Handling</h3>
+  <ul>
+    <li>Validasi semua input dari request body</li>
+    <li>Cek apakah category/produk ada sebelum create/update</li>
+    <li>Gunakan try-catch untuk error handling</li>
+    <li>Return response format yang konsisten</li>
+  </ul>
+  
+  <h3>Kriteria Penilaian</h3>
+  <ul>
+    <li>✅ Semua endpoints berfungsi (Category, Product, StockTransaction)</li>
+    <li>✅ Filtering berfungsi di products endpoint</li>
+    <li>✅ Validation input bekerja dengan benar</li>
+    <li>✅ Error handling menangani semua kasus error</li>
+    <li>✅ Response format konsisten (success, data, message)</li>
+    <li style="list-style:none"><br><strong>⭐ Bonus:</strong> Implementasi pagination untuk products</li>
+  </ul>
+  
+  <h3>Cara Pengumpulan</h3>
+  <p>Kumpulkan folder <code>erp-mongodb/</code> yang berisi:</p>
+  <ul>
+    <li><code>src/models/Category.js, Product.js, StockTransaction.js</code></li>
+    <li><code>src/controllers/*Controller.js</code></li>
+    <li><code>src/routes/*Routes.js</code></li>
+    <li><code>src/server.js</code></li>
+    <li><code>config/db.js</code></li>
+    <li><code>.env</code></li>
+  </ul>
+  <p>Kompres folder menjadi ZIP dan upload ke LMS. Sertakan screenshot test semua endpoints dengan Postman/cURL.</p>
+</div>`;
+
+// ── MODULE 9 CONTENT ──
+
+CONTENT['m9-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#059669">Module 9</span>
+  <h1 class="section-title">Lesson Plan — Frontend ES6 &amp; React Prep</h1>
+  <p class="section-subtitle">Pertemuan 9 — Fondasi JavaScript Modern untuk Frontend</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Menggunakan fitur ES6+ seperti Template Literals dan Ternary Operators secara efektif</li>
+    <li>Menerapkan Destructuring untuk Object dan Array</li>
+    <li>Memahami dan menggunakan Default Parameters pada fungsi</li>
+    <li>Menerapkan Spread dan Rest operators dalam manipulasi data</li>
+    <li>Menggunakan Array Methods modern (map, filter, reduce) dengan percaya diri</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>20 menit</td><td>ES6 Part 1: Template Literals &amp; Ternary Operators</td></tr>
+    <tr><td>25 menit</td><td>ES6 Part 2: Destructuring &amp; Default Parameters</td></tr>
+    <tr><td>30 menit</td><td>ES6 Part 3: Spread, Rest, dan Array Methods</td></tr>
+    <tr><td>35 menit</td><td>Guided Lab: Mengolah Data Mock untuk Frontend</td></tr>
+    <tr><td>10 menit</td><td>Q&amp;A dan Penjelasan Tugas Take-Home</td></tr>
+  </table>
+</div>`;
+
+CONTENT['m9-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#059669">Module 9 · Section A</span>
+  <h1 class="section-title">Template Literals &amp; Ternary Operator</h1>
+</div>
+<div class="content">
+  <h2>1. Template Literals (String Templates)</h2>
+  <p>Di JavaScript klasik (ES5), kita sering menggunakan tanda kutip tunggal (<code>' '</code>) atau ganda (<code>" "</code>) untuk membuat string. Jika kita ingin menggabungkan variabel ke dalam string, kita harus menggunakan operator <code>+</code> (concatenation). Hal ini sering menyebabkan kode yang sulit dibaca dan rentan kesalahan spasi.</p>
+  <p><strong>Template Literals</strong> diperkenalkan di ES6 menggunakan karakter <strong>backtick</strong> (<code>\` \`</code>) (biasanya terletak di atas tombol Tab). Fitur ini memberikan dua keuntungan besar:</p>
+  <ul>
+    <li><strong>Interpolasi Variabel (String Interpolation):</strong> Kita bisa menyisipkan variabel atau ekspresi JavaScript langsung ke dalam string menggunakan sintaks <code>\${ekspresi}</code>.</li>
+    <li><strong>Multiline Strings:</strong> Kita bisa membuat string lebih dari satu baris tanpa perlu menggunakan karakter escape seperti <code>\\n</code>.</li>
+  </ul>
+  
+  <h3>Contoh Penggunaan:</h3>
+  ${codeBlock('javascript','// --- CARA LAMA (ES5) ---\nconst firstName = "Budi";\nconst lastName = "Santoso";\nconst age = 25;\n\n// Concatenation yang rentan salah spasi\nconst greetingES5 = "Halo, nama saya " + firstName + " " + lastName + ".\\nUmur saya " + age + " tahun.";\n\n// --- CARA BARU (ES6 Template Literals) ---\n// Jauh lebih rapi dan intuitif\nconst greetingES6 = `Halo, nama saya ${firstName} ${lastName}.\nUmur saya ${age} tahun.`;\n\nconsole.log(greetingES6);')}
+
+  <h3>Mengeksekusi Logika di dalam Template Literals</h3>
+  <p>Anda tidak hanya bisa memasukkan variabel, tetapi juga ekspresi matematika atau pemanggilan fungsi ke dalam <code>\${...}</code>.</p>
+  ${codeBlock('javascript','const harga = 50000;\nconst pajak = 0.1;\n\nconst tagihan = `Total yang harus dibayar: Rp${harga + (harga * pajak)}`;\nconsole.log(tagihan); // Output: Total yang harus dibayar: Rp55000')}
+
+  <h2>2. Ternary Operator (Conditional Operator)</h2>
+  <p>Ternary operator adalah satu-satunya operator di JavaScript yang membutuhkan tiga operand. Ini adalah cara yang jauh lebih singkat dan bersih untuk menulis pernyataan <code>if...else</code> sederhana.</p>
+  <p><strong>Sintaks:</strong> <code>kondisi ? eksekusi_jika_benar : eksekusi_jika_salah</code></p>
+  
+  <h3>Perbandingan if...else vs Ternary</h3>
+  ${codeBlock('javascript','const nilaiUjian = 75;\nlet statusKelulusan;\n\n// --- CARA LAMA (if...else) ---\nif (nilaiUjian >= 70) {\n  statusKelulusan = "Lulus";\n} else {\n  statusKelulusan = "Gagal";\n}\n\n// --- CARA BARU (Ternary Operator) ---\n// Bisa langsung di-assign ke dalam variabel (sehingga bisa pakai const)\nconst statusTernary = nilaiUjian >= 70 ? "Lulus" : "Gagal";\n\nconsole.log(`Status Ujian: ${statusTernary}`);')}
+
+  <h3>Gabungan Template Literals & Ternary Operator</h3>
+  <p>Dalam React.js, Anda akan sangat sering melihat ternary operator disisipkan langsung ke dalam template literals untuk menentukan class CSS atau teks berdasarkan state.</p>
+  ${codeBlock('javascript','const isLoggedIn = true;\nconst username = "Admin123";\n\n// Menyisipkan ternary ke dalam string interpolasi\nconst welcomeMessage = `Welcome, ${isLoggedIn ? username : "Guest"}!`;\nconsole.log(welcomeMessage); // Output: Welcome, Admin123!')}
+  
+  ${callout('warning','Hindari Nested Ternary Bersarang','Meskipun Anda bisa memasukkan ternary di dalam ternary (nested ternary), hindari melakukannya jika membuat kode sulit dibaca. Jika kondisinya lebih dari dua cabang (A, B, C), lebih baik kembali menggunakan if...else atau switch case.')}
+</div>`;
+
+CONTENT['m9-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#059669">Module 9 · Section B</span>
+  <h1 class="section-title">Destructuring &amp; Default Parameters</h1>
+</div>
+<div class="content">
+  <h2>1. Object Destructuring</h2>
+  <p><strong>Destructuring</strong> adalah sintaks khusus di ES6 yang memungkinkan kita untuk "membongkar" (unpack) nilai dari sebuah Array atau properti dari sebuah Object, dan menyimpannya ke dalam variabel yang terpisah. Ini sangat memangkas jumlah kode saat kita perlu mengakses data yang bersarang (nested data).</p>
+  
+  <h3>Dasar Object Destructuring</h3>
+  ${codeBlock('javascript','const employee = {\n  id: 101,\n  name: "Citra",\n  role: "Frontend Developer",\n  department: "Engineering"\n};\n\n// --- CARA LAMA (ES5) ---\n// const name = employee.name;\n// const role = employee.role;\n\n// --- CARA BARU (ES6) ---\n// Nama variabel harus sama persis dengan nama properti di object\nconst { name, role, department } = employee;\n\nconsole.log(`${name} bekerja sebagai ${role} di divisi ${department}.`);')}
+
+  <h3>Aliasing (Mengganti Nama Variabel) dan Default Value</h3>
+  <p>Terkadang nama properti di API tidak sesuai dengan yang kita inginkan (misal terlalu panjang). Kita bisa mengganti namanya saat melakukan destructuring. Kita juga bisa memberikan nilai default jika propertinya tidak ada (undefined).</p>
+  ${codeBlock('javascript','const userSettings = {\n  theme_color: "dark",\n  fontSize: 14\n  // language tidak ada\n};\n\n// theme_color di-alias menjadi theme\n// language diberi nilai default "id" jika tidak ada di object\nconst { theme_color: theme, fontSize, language = "id" } = userSettings;\n\nconsole.log(`Theme: ${theme}, Font: ${fontSize}, Lang: ${language}`);')}
+
+  <h2>2. Array Destructuring</h2>
+  <p>Berbeda dengan object yang destructuring-nya berdasarkan <strong>nama properti</strong>, array destructuring bekerja berdasarkan <strong>urutan (index)</strong>.</p>
+  ${codeBlock('javascript','const rgb = [255, 128, 0];\n\n// Mengekstrak berdasarkan urutan index\nconst [red, green, blue] = rgb;\nconsole.log(`Red: ${red}, Green: ${green}, Blue: ${blue}`);\n\n// Kita bisa melewati (skip) elemen yang tidak kita butuhkan menggunakan koma kosong\nconst daftarJuara = ["Andi", "Budi", "Citra", "Doni"];\nconst [juara1, , juara3] = daftarJuara; // Budi (index 1) di-skip\nconsole.log(`Juara 1: ${juara1}, Juara 3: ${juara3}`);')}
+
+  <h2>3. Default Parameters pada Fungsi</h2>
+  <p>Di JavaScript, jika sebuah fungsi membutuhkan argumen namun kita tidak mengirimkannya saat memanggil fungsi, nilainya akan menjadi <code>undefined</code>. ES6 memungkinkan kita memberikan nilai *default* (bawaan) pada parameter fungsi, yang akan digunakan jika argumen tidak diberikan atau bernilai <code>undefined</code>.</p>
+  ${codeBlock('javascript','// Menginisialisasi parameter role dengan nilai default "Guest"\nfunction sapaPengguna(nama, role = "Guest") {\n  return `Halo ${nama}, status akses Anda adalah: ${role}`;\n}\n\n// Argumen kedua diisi, default diabaikan\nconsole.log(sapaPengguna("Andi", "Admin")); \n// Output: Halo Andi, status akses Anda adalah: Admin\n\n// Argumen kedua kosong, default digunakan\nconsole.log(sapaPengguna("Budi")); \n// Output: Halo Budi, status akses Anda adalah: Guest')}
+  
+  ${callout('info','Catatan Penting','Nilai default pada parameter hanya aktif jika argumen yang dikirimkan adalah <code>undefined</code> atau kosong. Jika argumen yang dikirimkan adalah <code>null</code>, <code>false</code>, <code>0</code>, atau <code>""</code> (string kosong), maka nilai default <strong>TIDAK</strong> akan digunakan karena nilai-nilai tersebut dianggap valid (bukan undefined).')}
+</div>`;
+
+CONTENT['m9-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#059669">Module 9 · Section C</span>
+  <h1 class="section-title">Spread, Rest &amp; Array Methods Modern</h1>
+</div>
+<div class="content">
+  <h2>1. Spread Operator (<code>...</code>)</h2>
+  <p>Spread operator bertugas untuk "menyebarkan" (membongkar) elemen-elemen dari array atau object. Dalam React, ini adalah teknik nomor satu yang akan Anda gunakan untuk meng-copy dan meng-update <em>state</em> (karena state di React bersifat immutable, artinya tidak boleh diubah secara langsung menggunakan assignment seperti <code>data.x = 1</code>).</p>
+  
+  <h3>Menduplikasi dan Menggabungkan Array</h3>
+  ${codeBlock('javascript','const buahLokal = ["Mangga", "Pisang"];\nconst buahImpor = ["Apel", "Anggur"];\n\n// Menggabungkan array (ES5 biasanya menggunakan .concat())\n// Dengan Spread, kita tinggal menyebarkan elemen-elemen tersebut ke dalam array baru\nconst semuaBuah = [...buahLokal, "Jeruk", ...buahImpor];\nconsole.log(semuaBuah); \n// Output: ["Mangga", "Pisang", "Jeruk", "Apel", "Anggur"]')}
+
+  <h3>Menduplikasi dan Menggabungkan Object</h3>
+  ${codeBlock('javascript','const dataUser = { name: "Ali", age: 25 };\nconst dataPekerjaan = { job: "Programmer", company: "TechCorp" };\n\n// Menggabungkan object sekaligus menambah/menimpa properti baru\nconst userProfile = {\n  ...dataUser,\n  ...dataPekerjaan,\n  location: "Jakarta",\n  age: 26 // Menimpa age dari dataUser (karena ditulis setelah ...dataUser)\n};\n\nconsole.log(userProfile);\n/* Output:\n{\n  name: "Ali",\n  job: "Programmer",\n  company: "TechCorp",\n  location: "Jakarta",\n  age: 26\n}\n*/')}
+
+  <h2>2. Rest Parameter (<code>...</code>)</h2>
+  <p>Walaupun sintaksnya sama persis dengan Spread (<code>...</code>), kegunaannya justru 180 derajat berbeda. <strong>Rest parameter mengumpulkan sisa elemen yang tidak terpakai menjadi sebuah Array (atau Object).</strong></p>
+  
+  <h3>Rest pada Parameter Fungsi</h3>
+  ${codeBlock('javascript','// Kita ingin menerima berapa pun angka yang dimasukkan (tidak terbatas)\nfunction hitungTotal(mataUang, ...angkaAngka) {\n  let total = 0;\n  for(let angka of angkaAngka) {\n    total += angka;\n  }\n  return `Total: ${mataUang} ${total}`;\n}\n\nconsole.log(hitungTotal("Rp", 1000, 2000, 5000)); \n// Output: Total: Rp 8000')}
+  
+  <h3>Rest pada Object Destructuring</h3>
+  ${codeBlock('javascript','const murid = { id: 1, nama: "Budi", nilai: 90, kelas: "A" };\n\n// Mengambil "nama", lalu membungkus sisa propertinya ke dalam object "sisaData"\nconst { nama, ...sisaData } = murid;\n\nconsole.log(nama);     // "Budi"\nconsole.log(sisaData); // { id: 1, nilai: 90, kelas: "A" }')}
+
+  <h2>3. High-Order Array Methods: <code>map</code>, <code>filter</code>, <code>reduce</code></h2>
+  <p>Dalam paradigma Functional Programming, kita dianjurkan menghindari loop tradisional seperti <code>for</code> atau <code>while</code>, dan menggunakan metode bawaan array yang lebih deklaratif.</p>
+
+  <h3><code>Array.map()</code></h3>
+  <p>Digunakan untuk me-looping sebuah array dan <strong>membuat array baru yang panjangnya sama</strong>, tapi isinya telah ditransformasi/diubah sesuai fungsi yang diberikan.</p>
+  ${codeBlock('javascript','const hargaBarang = [10000, 25000, 50000];\n// Beri diskon 10%\nconst hargaDiskon = hargaBarang.map((harga) => harga - (harga * 0.1));\n\nconsole.log(hargaDiskon); // [9000, 22500, 45000]')}
+
+  <h3><code>Array.filter()</code></h3>
+  <p>Digunakan untuk <strong>menyaring</strong> array. Fungsi di dalam <code>filter</code> harus mengembalikan <code>true</code> (elemen disimpan) atau <code>false</code> (elemen dibuang). Panjang array baru bisa lebih pendek dari array asli.</p>
+  ${codeBlock('javascript','const angka = [10, 5, 20, 15, 8];\n// Ambil angka yang lebih dari 10\nconst diAtasSepuluh = angka.filter((a) => a > 10);\n\nconsole.log(diAtasSepuluh); // [20, 15]')}
+
+  <h3><code>Array.reduce()</code></h3>
+  <p>Digunakan untuk mengakumulasi (menjumlahkan, menggabungkan) semua elemen array menjadi <strong>satu nilai tunggal</strong>. Butuh dua argumen: <em>Accumulator</em> (penampung total sementara) dan <em>Current Value</em> (elemen saat ini di loop), serta nilai awal.</p>
+  ${codeBlock('javascript','const keranjangBelanja = [\n  { item: "Buku", harga: 50000 },\n  { item: "Tas", harga: 150000 },\n  { item: "Pensil", harga: 5000 }\n];\n\n// Menjumlahkan total harga keranjang belanja\n// parameter ke-1 dari reduce: (totalSementara, itemSaatIni) => ...\n// parameter ke-2 dari reduce: 0 (nilai awal totalSementara)\nconst totalBayar = keranjangBelanja.reduce((totalSementara, barang) => {\n  return totalSementara + barang.harga;\n}, 0);\n\nconsole.log(`Total: Rp${totalBayar}`); // Total: Rp205000')}
+</div>`;
+
+CONTENT['m9-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#059669">Module 9 · Section D</span>
+  <h1 class="section-title">Guided Lab: Membangun Data Processor Dashboard</h1>
+</div>
+<div class="content">
+  <p>Mari kita satukan semua konsep ES6 yang telah dipelajari! Di lab ini, kita akan mensimulasikan tugas yang sangat umum di dunia Frontend: menerima data mentah dari API Backend, membersihkan dan memformat data tersebut, lalu menyiapkan struktur data baru yang siap untuk dirender di UI Dashboard.</p>
+
+  ${stepCard(1,'Persiapan Data Mentah (Mock API Response)',`
+    <p>Bayangkan Anda menerima response JSON dari server seperti ini:</p>
+    ${codeBlock('javascript','// mockData.js\nconst rawUsersAPI = [\n  { id: 1, fullname: "Ali bin Abu", role: "admin", scores: [80, 90, 85, 100], active: true },\n  { id: 2, fullname: "Budi Santoso", scores: [70, 75], active: true }, // Tidak punya role\n  { id: 3, fullname: "Citra Ayu", role: "user", scores: [95, 90, 100], active: false }, // Inactive\n  { id: 4, fullname: "Doni Pratama", role: "user", scores: [], active: true } // Belum ada score\n];')}
+  `,true)}
+
+  ${stepCard(2,'Menyaring Data dengan Filter',`
+    <p>Langkah pertama, Dashboard kita hanya boleh menampilkan data user yang sedang "active". Kita gunakan <code>filter</code>.</p>
+    ${codeBlock('javascript','// Menyaring user yang active = true\nconst activeUsers = rawUsersAPI.filter(user => user.active === true);\nconsole.log(activeUsers.length); // Output: 3 (Citra di-filter keluar)')}
+  `,false)}
+
+  ${stepCard(3,'Transformasi Data dengan Map, Destructuring, dan Rest',`
+    <p>Sekarang, dari <code>activeUsers</code>, kita perlu mengubah struktur tiap object. Kita akan gunakan <code>map</code> untuk looping, lalu <strong>Destructuring</strong> untuk mengambil field tertentu, dan <strong>Rest parameter</strong> untuk mengambil sisa data.</p>
+    ${codeBlock('javascript','const processedDashboardData = activeUsers.map((user) => {\n  // 1. Destructuring dengan Default Value untuk role (karena Budi tidak punya)\n  // Kita pisahkan fullname dan scores. Sisa field (id, active) masuk ke ...restData\n  const { fullname, role = "standard_user", scores, ...restData } = user;\n\n  // 2. Menghitung Rata-rata Skor dengan Reduce\n  // Jika array scores kosong, reduce tidak bisa jalan tanpa default, jadi pastikan handle itu.\n  const totalScore = scores.reduce((acc, curr) => acc + curr, 0);\n  const average = scores.length > 0 ? (totalScore / scores.length) : 0;\n\n  // 3. Menentukan status kelulusan dengan Ternary Operator (Batas lulus > 80)\n  const isPassed = average > 80 ? "Lulus" : "Tidak Lulus";\n\n  // 4. Return Object baru dengan Spread Operator\n  // Kita bentuk struktur yang benar-benar baru, menggabungkan data rest, data baru, dsb.\n  return {\n    ...restData,                    // Membawa id dan active\n    namaLengkap: fullname,          // Alias/ganti nama key\n    jabatan: role.toUpperCase(),    // Memanipulasi string\n    rataRataNilai: average.toFixed(2),\n    status: isPassed,\n    ringkasan: `${fullname} (${role}) memiliki rata-rata ${average.toFixed(2)} - Status: ${isPassed}` // Template Literals\n  };\n});')}
+  `,false)}
+  
+  ${stepCard(4,'Hasil Akhir dan Output',`
+    <p>Jika kita men-console log <code>processedDashboardData</code>, kita akan mendapatkan struktur data bersih yang siap dirender ke tabel frontend!</p>
+    ${codeBlock('javascript','console.log(processedDashboardData);\n/* Output:\n[\n  {\n    id: 1,\n    active: true,\n    namaLengkap: \'Ali bin Abu\',\n    jabatan: \'ADMIN\',\n    rataRataNilai: \'88.75\',\n    status: \'Lulus\',\n    ringkasan: \'Ali bin Abu (admin) memiliki rata-rata 88.75 - Status: Lulus\'\n  },\n  {\n    id: 2,\n    active: true,\n    namaLengkap: \'Budi Santoso\',\n    jabatan: \'STANDARD_USER\',\n    rataRataNilai: \'72.50\',\n    status: \'Tidak Lulus\',\n    ringkasan: \'Budi Santoso (standard_user) memiliki rata-rata 72.50 - Status: Tidak Lulus\'\n  },\n  {\n    id: 4,\n    active: true,\n    namaLengkap: \'Doni Pratama\',\n    jabatan: \'USER\',\n    rataRataNilai: \'0.00\',\n    status: \'Tidak Lulus\',\n    ringkasan: \'Doni Pratama (user) memiliki rata-rata 0.00 - Status: Tidak Lulus\'\n  }\n]\n*/')}
+  `,false)}
+</div>`;
+
+CONTENT['m9-e'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#059669">Module 9 · Section E</span>
+  <h1 class="section-title">Take-Home: ES6 Refactoring Challenge</h1>
+</div>
+<div class="content">
+  <h2>Latar Belakang Tugas</h2>
+  <p>Anda mewarisi kode peninggalan developer sebelumnya (legacy code) yang ditulis murni menggunakan JavaScript ES5 (kuno). Kode ini berfungsi memproses data inventaris buku di perpustakaan, namun sangat panjang, sulit dibaca, dan menggunakan pendekatan prosedural yang usang.</p>
+  
+  <h2>Tugas Anda</h2>
+  <p>Lakukan <strong>Refactoring</strong>: Tulis ulang kode di bawah ini menggunakan sintaks ES6 Modern tanpa merubah hasil akhir (output) dari program.</p>
+  
+  <h3>Kode ES5 yang harus di-refactor:</h3>
+  ${codeBlock('javascript','// LEGACY CODE - ES5\nvar library = [\n  { id: "B01", title: "JavaScript The Good Parts", author: "Douglas Crockford", year: 2008, isAvailable: true },\n  { id: "B02", title: "Clean Code", author: "Robert C. Martin", year: 2008, isAvailable: false },\n  { id: "B03", title: "You Dont Know JS", author: "Kyle Simpson", year: 2015, isAvailable: true },\n  { id: "B04", title: "Eloquent JavaScript", author: "Marijn Haverbeke", year: 2018, isAvailable: true }\n];\n\nfunction getAvailableBooksSummary(books, maxYear) {\n  // Proteksi argumen default ES5\n  if (maxYear === undefined) {\n    maxYear = 2020;\n  }\n\n  var availableBooks = [];\n  \n  // Looping tradisional\n  for (var i = 0; i < books.length; i++) {\n    var currentBook = books[i];\n    if (currentBook.isAvailable === true && currentBook.year <= maxYear) {\n      availableBooks.push(currentBook);\n    }\n  }\n\n  var results = [];\n  for (var j = 0; j < availableBooks.length; j++) {\n    var book = availableBooks[j];\n    var id = book.id;\n    var title = book.title;\n    var author = book.author;\n    \n    // Penggabungan string manual\n    var description = "Book [" + id + "]: " + title + " by " + author + ".";\n    \n    var isModern;\n    if (book.year >= 2015) {\n      isModern = "Modern Book";\n    } else {\n      isModern = "Classic Book";\n    }\n\n    // Menambahkan field baru ke object\n    results.push({\n      id: id,\n      title: title,\n      author: author,\n      description: description,\n      category: isModern\n    });\n  }\n\n  return results;\n}\n\nvar summary = getAvailableBooksSummary(library, 2016);\nconsole.log(summary);')}
+
+  <h3>Checklist Persyaratan ES6 (Wajib Digunakan):</h3>
+  <ul>
+    <li>[ ] Ganti <code>var</code> dengan <code>const</code> atau <code>let</code> secara tepat.</li>
+    <li>[ ] Ganti fungsi biasa dengan <strong>Arrow Functions</strong> (jika memungkinkan).</li>
+    <li>[ ] Ganti pengecekan <code>maxYear === undefined</code> dengan <strong>Default Parameter</strong>.</li>
+    <li>[ ] Ganti looping <code>for</code> dan <code>push()</code> pertama dengan Array Method <strong><code>.filter()</code></strong>.</li>
+    <li>[ ] Ganti looping <code>for</code> kedua dengan Array Method <strong><code>.map()</code></strong>.</li>
+    <li>[ ] Ekstrak field (id, title, author, year) menggunakan <strong>Object Destructuring</strong>.</li>
+    <li>[ ] Ganti penggabungan string <code>"Book [" + id + "]: " ...</code> dengan <strong>Template Literals</strong>.</li>
+    <li>[ ] Ganti logika <code>if(book.year >= 2015)</code> dengan <strong>Ternary Operator</strong>.</li>
+    <li>[ ] Saat me-return object baru di dalam map, gunakan <strong>Spread Operator</strong> jika itu membuat kode lebih efisien.</li>
+  </ul>
+  
+  <h3>Cara Pengumpulan</h3>
+  <p>Kumpulkan file <code>es6_refactored.js</code> Anda melalui portal e-learning. Pastikan saat file dijalankan dengan <code>node es6_refactored.js</code>, output console identik dengan versi ES5 di atas.</p>
+</div>`;
+
+// ── MODULE 10 CONTENT ──
+
+CONTENT['m10-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#7C3AED">Module 10</span>
+  <h1 class="section-title">Lesson Plan — Frontend: Async/Await &amp; React Setup</h1>
+  <p class="section-subtitle">Pertemuan 10 — Menghubungkan API dan Memulai React</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Menggunakan <code>fetch</code> dan <code>async/await</code> untuk mengambil data dari Backend API</li>
+    <li>Menginisialisasi proyek React modern menggunakan Vite</li>
+    <li>Memahami anatomi proyek React dan JSX</li>
+    <li>Membuat Functional Components dan memahami mengapa Class Components mulai ditinggalkan</li>
+    <li>Mengoper data antar komponen menggunakan Props</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>20 menit</td><td>Async/Await, Try-Catch, dan Fetch API di Frontend</td></tr>
+    <tr><td>20 menit</td><td>Setup React menggunakan Vite &amp; Penjelasan Struktur Folder</td></tr>
+    <tr><td>20 menit</td><td>Pengenalan JSX, Functional Components vs Class Components</td></tr>
+    <tr><td>20 menit</td><td>Konsep Props dan Reusability</td></tr>
+    <tr><td>40 menit</td><td>Guided Lab: Merender Product Card dari Dummy Data &amp; Penjelasan Tugas</td></tr>
+  </table>
+</div>`;
+
+CONTENT['m10-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#7C3AED">Module 10 · Section A</span>
+  <h1 class="section-title">Async/Await &amp; API Calls di Frontend</h1>
+</div>
+<div class="content">
+  <h2>Mengambil Data dari Server (Fetch API)</h2>
+  <p>Di modul backend, kita sudah membuat REST API (misalnya <code>GET /api/products</code>). Sekarang di frontend, kita perlu "memanggil" API tersebut untuk mendapatkan data JSON-nya. Standar modern di browser adalah menggunakan <strong>Fetch API</strong>.</p>
+  <p>Karena proses pengambilan data melalui internet butuh waktu (tidak instan), proses ini bersifat <strong>Asynchronous</strong>. Di ES6+, cara paling rapi untuk menangani proses asynchronous adalah dengan <code>async</code> dan <code>await</code>.</p>
+  
+  <h3>Anatomi Async/Await</h3>
+  <p>Untuk menggunakan <code>await</code>, fungsi yang membungkusnya wajib ditandai dengan kata kunci <code>async</code>.</p>
+  ${codeBlock('javascript','// 1. Deklarasikan fungsi sebagai async\nasync function getProducts() {\n  try {\n    // 2. await menunggu fetch selesai mengunduh data\n    const response = await fetch("https://fakestoreapi.com/products");\n    \n    // 3. await menunggu proses konversi respon jaringan menjadi JSON\n    const data = await response.json();\n    \n    console.log("Data berhasil diambil:", data);\n  } catch (error) {\n    // 4. try-catch digunakan untuk menangani error (misal: server mati, tidak ada internet)\n    console.error("Gagal mengambil data:", error.message);\n  }\n}\n\n// Panggil fungsinya\ngetProducts();')}
+
+  <h3>Kenapa Harus Async/Await? (Bandingkan dengan Promise .then)</h3>
+  <p>Sebelum ada async/await, kita menggunakan rantai <code>.then()</code>. Walaupun masih valid, kodenya sering kali menjadi menjorok ke dalam (callback hell) dan sulit dibaca.</p>
+  ${codeBlock('javascript','// Cara Lama (Promise .then)\nfunction getProductsLama() {\n  fetch("https://fakestoreapi.com/products")\n    .then(response => response.json())\n    .then(data => console.log(data))\n    .catch(error => console.error(error));\n}')}
+  <p>Dengan <code>async/await</code>, kode asynchronous kita terlihat dan terasa seperti kode synchronous biasa yang dieksekusi dari atas ke bawah.</p>
+</div>`;
+
+CONTENT['m10-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#7C3AED">Module 10 · Section B</span>
+  <h1 class="section-title">Setup React Menggunakan Vite</h1>
+</div>
+<div class="content">
+  <h2>Selamat Tinggal CRA, Halo Vite!</h2>
+  <p>Dulu, standar industri untuk membuat aplikasi React adalah menggunakan <code>create-react-app</code> (CRA). Namun, CRA sekarang dianggap usang dan sangat lambat. Saat ini, komunitas beralih ke <strong>Vite</strong> (bahasa Prancis untuk "cepat"), sebuah <em>build tool</em> modern yang menyalakan server lokal secara instan.</p>
+  
+  <h3>Cara Inisialisasi Proyek Vite + React</h3>
+  <p>Buka terminal Anda, masuk ke folder tempat Anda ingin membuat proyek, lalu jalankan perintah ini:</p>
+  ${codeBlock('bash','npm create vite@latest frontend-erp -- --template react\n\n# Setelah selesai, masuk ke folder dan install dependency\ncd frontend-erp\nnpm install\n\n# Jalankan server lokal\nnpm run dev')}
+  <p>Jika berhasil, Anda akan mendapatkan URL lokal (misal: <code>http://localhost:5173</code>). Buka di browser, dan Anda akan melihat halaman awal React + Vite!</p>
+
+  <h3>Memahami Struktur Folder Vite</h3>
+  <ul>
+    <li><code>index.html</code>: Titik masuk utama aplikasi (entry point). Berbeda dengan CRA yang menyembunyikan file ini di folder public, Vite meletakkannya di root. Ada sebuah div kosong <code>&lt;div id="root"&gt;&lt;/div&gt;</code> di dalamnya.</li>
+    <li><code>src/main.jsx</code>: File JavaScript pertama yang dieksekusi. File ini bertugas merender aplikasi React Anda (<code>&lt;App /&gt;</code>) ke dalam div "root" di <code>index.html</code>.</li>
+    <li><code>src/App.jsx</code>: Komponen utama aplikasi Anda. Di sinilah Anda akan mulai menulis kode UI.</li>
+    <li><code>package.json</code>: Daftar <em>dependencies</em> (React, React-DOM) dan <em>scripts</em> untuk menjalankan Vite.</li>
+  </ul>
+</div>`;
+
+CONTENT['m10-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#7C3AED">Module 10 · Section C</span>
+  <h1 class="section-title">Functional vs Class Components</h1>
+</div>
+<div class="content">
+  <h2>Apa itu Komponen?</h2>
+  <p>Di React, UI (User Interface) dipecah menjadi bagian-bagian kecil yang dapat digunakan kembali secara independen yang disebut <strong>Komponen (Components)</strong>. Bayangkan komponen seperti balok-balok Lego. Header adalah satu komponen, Sidebar komponen lain, dan tombol adalah komponen kecil di dalamnya.</p>
+  
+  <h2>Functional Components (Standar Modern)</h2>
+  <p>Saat ini (sejak React versi 16.8), <strong>Functional Component</strong> adalah cara utama dan direkomendasikan untuk menulis komponen. Komponen fungsional pada dasarnya hanyalah sebuah fungsi JavaScript biasa yang me-return <strong>JSX</strong> (sintaks HTML di dalam JavaScript).</p>
+  ${codeBlock('jsx','// src/components/Greeting.jsx\n\n// Menggunakan Arrow Function (ES6)\nconst Greeting = () => {\n  const nama = "Budi";\n  \n  // Return JSX\n  return (\n    <div className="card">\n      <h1>Halo, {nama}!</h1>\n      <p>Selamat datang di React.</p>\n    </div>\n  );\n};\n\nexport default Greeting;')}
+  
+  <h3>Aturan Dasar JSX:</h3>
+  <ol>
+    <li><strong>Harus punya satu elemen pembungkus (Parent).</strong> Tidak boleh mereturn dua elemen yang sejajar secara langsung. Gunakan <code>&lt;div&gt;</code> atau React Fragment <code>&lt;&gt;...&lt;/&gt;</code>.</li>
+    <li>Gunakan <strong><code>className</code></strong>, bukan <code>class</code> (karena class adalah keyword di JS).</li>
+    <li>Tutup semua tag! Tag HTML seperti <code>&lt;img&gt;</code> atau <code>&lt;input&gt;</code> harus diakhiri dengan garis miring: <code>&lt;img src="..." /&gt;</code>.</li>
+    <li>Gunakan kurung kurawal <code>{}</code> untuk menyisipkan variabel atau logika JavaScript ke dalam JSX.</li>
+  </ol>
+
+  <h2>Class Components (Sejarah Singkat)</h2>
+  <p>Sebelum tahun 2019, fungsi JavaScript biasa tidak memiliki cara untuk menyimpan data sementara (State) atau merespon siklus hidup (Lifecycle). Oleh karena itu, developer dulu <em>wajib</em> menggunakan <strong>Class Component</strong> yang berbasis *Object-Oriented Programming* (OOP).</p>
+  ${codeBlock('jsx','// CONTOH CLASS COMPONENT (LEGACY)\nimport React, { Component } from "react";\n\nclass OldGreeting extends Component {\n  constructor(props) {\n    super(props);\n    this.state = { nama: "Budi" };\n  }\n\n  render() {\n    return (\n      <div>\n        <h1>Halo, {this.state.nama}!</h1>\n      </div>\n    );\n  }\n}\nexport default OldGreeting;')}
+  <p><strong>Kenapa ditinggalkan?</strong> Class component kodenya panjang, membutuhkan pemahaman mendalam tentang keyword <code>this</code> di JavaScript yang sering membingungkan, dan sulit di-minifikasi oleh bundler. Dengan hadirnya <strong>React Hooks</strong>, Functional component sekarang bisa melakukan semua hal yang dulunya hanya bisa dilakukan Class component, tetapi dengan kode yang jauh lebih ringkas!</p>
+</div>`;
+
+CONTENT['m10-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#7C3AED">Module 10 · Section D</span>
+  <h1 class="section-title">Props &amp; Reusable Components</h1>
+</div>
+<div class="content">
+  <h2>Apa itu Props?</h2>
+  <p><strong>Props</strong> (singkatan dari Properties) adalah cara komponen React untuk saling berkomunikasi. Props memungkinkan kita mengirimkan data dari Komponen Induk (Parent) turun ke Komponen Anak (Child). Sifat props adalah <strong>Read-Only</strong> — komponen anak tidak boleh mengubah props yang diterimanya.</p>
+  
+  <h3>Membuat Komponen yang Reusable</h3>
+  <p>Bayangkan kita ingin membuat kartu profil pengguna. Daripada menulis HTML panjang berulang kali untuk Ali, Budi, dan Citra, kita bisa membuat satu komponen <code>UserCard</code> yang menerima nama dan role melalui props.</p>
+  
+  ${codeBlock('jsx','// 1. Komponen Anak (Menerima Props)\n// Kita langsung menggunakan Destructuring (ES6) pada parameter props\nconst UserCard = ({ name, role, isActive }) => {\n  return (\n    <div className="user-card">\n      <h3>{name}</h3>\n      <p>Role: {role}</p>\n      {/* Menggunakan Ternary untuk styling bersyarat */}\n      <span style={{ color: isActive ? "green" : "red" }}>\n        {isActive ? "Online" : "Offline"}\n      </span>\n    </div>\n  );\n};\n\n// 2. Komponen Induk (Mengirim Props)\nconst App = () => {\n  return (\n    <div className="container">\n      <h1>Daftar Karyawan</h1>\n      {/* Memanggil komponen UserCard dan mengoper data sebagai atribut HTML */}\n      <UserCard name="Ali" role="Admin" isActive={true} />\n      <UserCard name="Budi" role="Staff" isActive={false} />\n      <UserCard name="Citra" role="Manager" isActive={true} />\n    </div>\n  );\n};\n\nexport default App;')}
+  
+  ${callout('info','Data Flow Searah (Unidirectional)','Di React, data selalu mengalir dari atas ke bawah (Parent ke Child). Jika Parent mengubah nilai yang dikirim ke Props, Child akan otomatis merender ulang (re-render) untuk menampilkan nilai terbaru.')}
+</div>`;
+
+CONTENT['m10-e'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#7C3AED">Module 10 · Section E</span>
+  <h1 class="section-title">Guided Lab &amp; Take-Home</h1>
+</div>
+<div class="content">
+  <h2>Guided Lab: Product List Rendering</h2>
+  <p>Di sesi lab bersama instruktur ini, kita akan membuat halaman yang merender list of products menggunakan data array statis. Kita akan menggabungkan konsep <strong>Array.map()</strong> dari modul sebelumnya dengan <strong>Props</strong> React.</p>
+  
+  ${stepCard(1,'Membuat Komponen ProductCard',`
+    <p>Buat file <code>src/components/ProductCard.jsx</code>:</p>
+    ${codeBlock('jsx','const ProductCard = ({ title, price, category }) => {\n  return (\n    <div style={{ border: "1px solid #ccc", padding: "10px", margin: "10px", borderRadius: "8px" }}>\n      <h4>{title}</h4>\n      <p>Kategori: {category}</p>\n      <p><strong>Harga: Rp {price.toLocaleString("id-ID")}</strong></p>\n    </div>\n  );\n};\n\nexport default ProductCard;')}
+  `,true)}
+
+  ${stepCard(2,'Merender Array di App.jsx',`
+    <p>Di <code>src/App.jsx</code>, kita buat mock data dan meloopingnya menggunakan <code>map()</code>.</p>
+    ${codeBlock('jsx','import ProductCard from "./components/ProductCard";\n\nconst App = () => {\n  // Data Statis (Mock)\n  const products = [\n    { id: 1, name: "Baut M6", cat: "Hardware", price: 350 },\n    { id: 2, name: "Oli Mesin", cat: "Lubricant", price: 55000 },\n    { id: 3, name: "Filter Udara", cat: "Sparepart", price: 120000 }\n  ];\n\n  return (\n    <div>\n      <h1>Katalog Produk ERP</h1>\n      <div style={{ display: "flex", gap: "10px" }}>\n        {/* Gunakan map() untuk merender komponen berulang-ulang */}\n        {products.map((item) => (\n          <ProductCard \n            key={item.id} \n            title={item.name} \n            category={item.cat} \n            price={item.price} \n          />\n        ))}\n      </div>\n    </div>\n  );\n};\n\nexport default App;')}
+  `,false)}
+  
+  ${callout('warning','Aturan "key" pada List JSX','Setiap kali Anda merender array di JSX menggunakan <code>map()</code>, elemen terluar yang direturn WAJIB memiliki properti <code>key</code> yang unik (biasanya ID data). Ini membantu React mengidentifikasi item mana yang berubah, ditambahkan, atau dihapus secara efisien.')}
+
+  <hr style="margin: 40px 0; border: 1px solid #E2E8F0;" />
+
+  <h2>Take-Home: Refactor UI ke Komponen Mandiri</h2>
+  <p><strong>Tugas:</strong> Bayangkan Anda sedang membangun antarmuka Dashboard Sistem ERP yang menampilkan 3 seksi berbeda: Data Karyawan, Data Gudang, dan Data Keuangan.</p>
+  <ol>
+    <li>Buat proyek Vite React baru bernama <code>erp-dashboard-ui</code>.</li>
+    <li>Buat 3 komponen terpisah: <code>EmployeeCard.jsx</code>, <code>WarehouseCard.jsx</code>, dan <code>FinanceCard.jsx</code>.</li>
+    <li>Masing-masing komponen harus menerima minimal 3 props yang relevan (misal EmployeeCard menerima nama, jabatan, status).</li>
+    <li>Di <code>App.jsx</code>, buat 3 buah array (mock data) untuk masing-masing kategori (minimal 3 item per array).</li>
+    <li>Gunakan <code>.map()</code> untuk merender array-array tersebut dengan memanggil komponen-komponen yang telah Anda buat.</li>
+  </ol>
+  
+  <h3>Cara Pengumpulan:</h3>
+  <p>Hapus folder <code>node_modules</code> (wajib!), lalu zip folder proyek Anda dan unggah ke LMS. Sertakan juga tangkapan layar (screenshot) tampilan browser saat aplikasi dijalankan.</p>
+</div>`;
+
+// ── MODULE 11 CONTENT ──
+
+CONTENT['m11-plan'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#EC4899">Module 11</span>
+  <h1 class="section-title">Lesson Plan — Frontend: UI Composition &amp; Logic</h1>
+  <p class="section-subtitle">Pertemuan 11 — Merangkai UI Dinamis dengan React</p>
+</div>
+<div class="content">
+  <h2>Tujuan Pembelajaran</h2>
+  <p>Setelah menyelesaikan modul ini, peserta mampu:</p>
+  <ul>
+    <li>Memahami konsep Nested Components (Komponen Bersarang) untuk merakit UI kompleks</li>
+    <li>Menerapkan rendering daftar (List) menggunakan <code>.map()</code> dan memahami urgensi <code>key</code> prop</li>
+    <li>Mengaplikasikan berbagai metode Styling di React (Inline, Vanilla CSS, CSS Modules)</li>
+    <li>Menggunakan Conditional Rendering (Ternary &amp; Logical AND) untuk menampilkan UI secara dinamis</li>
+  </ul>
+  <h2>Alokasi Waktu (120 menit)</h2>
+  <table>
+    <tr><th>Durasi</th><th>Kegiatan</th></tr>
+    <tr><td>20 menit</td><td>Konsep Nested Components &amp; Component Tree</td></tr>
+    <tr><td>20 menit</td><td>Deep Dive: Lists &amp; Keys pada React</td></tr>
+    <tr><td>20 menit</td><td>Pendekatan Styling (Inline, CSS, CSS Modules)</td></tr>
+    <tr><td>20 menit</td><td>Conditional Rendering (&& dan Ternary)</td></tr>
+    <tr><td>40 menit</td><td>Guided Lab: Membangun Dashboard Layout Sederhana</td></tr>
+  </table>
+</div>`;
+
+CONTENT['m11-a'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#EC4899">Module 11 · Section A</span>
+  <h1 class="section-title">Nested Components (Komponen Bersarang)</h1>
+</div>
+<div class="content">
+  <h2>Filosofi Komponen Berbasis Pohon (Component Tree)</h2>
+  <p>React mendorong kita untuk memikirkan User Interface (UI) sebagai sekumpulan blok bangunan kecil yang mandiri (komponen). Daripada memiliki satu file raksasa (seperti <code>index.html</code> tradisional) yang berisi ribuan baris kode, kita memecahnya menjadi bagian-bagian yang lebih kecil, dapat digunakan kembali (reusable), dan mudah diuji (testable).</p>
+  
+  <h3>Anatomi Nested Components</h3>
+  <p><strong>Nested Components</strong> (komponen bersarang) terjadi ketika sebuah komponen memanggil komponen lain di dalam <code>return</code> (JSX)-nya. Komponen yang memanggil disebut <strong>Parent Component</strong> (Induk), dan komponen yang dipanggil disebut <strong>Child Component</strong> (Anak).</p>
+  
+  <p>Sebagai contoh, mari kita lihat anatomi Dashboard ERP modern:</p>
+  <ul>
+    <li><code>App</code> (Root Component - menampung seluruh state utama)
+      <ul>
+        <li><code>Sidebar</code> (Komponen navigasi statis)</li>
+        <li><code>MainContent</code> (Bungkus konten dinamis)
+          <ul>
+            <li><code>Header</code> (Menampilkan profil user)</li>
+            <li><code>StatsWidget</code> (Digunakan berulang kali untuk menampilkan angka statistik)</li>
+            <li><code>DataList</code> (Tabel berisi data dari API)</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  
+  <h3>Praktik Kode: Merakit Komponen</h3>
+  <p>Berikut adalah bagaimana struktur di atas diimplementasikan dalam bentuk kode React. Perhatikan bagaimana setiap komponen hanya fokus pada satu tugas yang spesifik (Prinsip <em>Single Responsibility</em>).</p>
+  ${codeBlock('jsx','// 1. Komponen Anak Terkecil (Child)\n// Sangat re-usable. Bisa dipanggil puluhan kali dengan props berbeda.\nconst StatsWidget = ({ title, value, icon }) => (\n  <div className="widget-card">\n    <span className="icon">{icon}</span>\n    <div className="widget-info">\n      <h4>{title}</h4>\n      <h2>{value}</h2>\n    </div>\n  </div>\n);\n\n// 2. Komponen Induk Menengah (Parent untuk Stats, Child untuk App)\nconst MainContent = () => (\n  <main className="dashboard-main">\n    <h1>Dashboard Keuangan</h1>\n    \n    {/* Memanggil komponen anak secara berulang (Nested) */}\n    <div className="widgets-grid">\n      <StatsWidget title="Total Pendapatan" value="Rp 125M" icon="💰" />\n      <StatsWidget title="Pengguna Aktif" value="1,240" icon="👥" />\n      <StatsWidget title="Tiket Support" value="12 Open" icon="🎫" />\n    </div>\n  </main>\n);\n\n// 3. Komponen Root Utama\nconst App = () => (\n  <div className="app-layout">\n    {/* Sidebar dan MainContent bersarang di dalam App */}\n    <Sidebar />\n    <MainContent />\n  </div>\n);')}
+  
+  ${callout('warning','Bahaya: Jangan Deklarasikan Komponen di Dalam Komponen!','Satu kesalahan pemula yang sering terjadi adalah membuat fungsi komponen <em>di dalam</em> fungsi komponen lain. Hal ini sangat dilarang karena akan memaksa React untuk menghancurkan dan membuat ulang komponen anak dari nol setiap kali komponen induk dirender ulang (re-render), yang menyebabkan bug performa dan hilangnya <em>state</em>.')}
+  
+  ${codeBlock('jsx','// ❌ CONTOH BURUK (JANGAN DITIRU)\nconst Parent = () => {\n  // Dilarang keras membuat komponen di dalam komponen lain!\n  const Child = () => <div>Halo!</div>;\n  return <Child />;\n};\n\n// ✅ CONTOH BENAR\nconst Child = () => <div>Halo!</div>;\nconst Parent = () => <Child />;')}
+  
+  ${callout('info','Apa itu Prop Drilling?','Saat aplikasi Anda mulai besar, Anda mungkin menyadari bahwa Anda mengoper data (props) melewati 3 atau 4 tingkat komponen hanya agar komponen paling bawah bisa mendapatkannya. Komponen di tengah sebenarnya tidak butuh data tersebut, mereka hanya bertugas sebagai kurir. Fenomena ini disebut <strong>Prop Drilling</strong>. Di modul-modul lanjutan (seperti React Context API atau Redux), kita akan belajar cara mengatasi ini dengan menggunakan State Management Global.')}
+</div>`;
+
+CONTENT['m11-b'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#EC4899">Module 11 · Section B</span>
+  <h1 class="section-title">List &amp; Keys: Rendering Dinamis</h1>
+</div>
+<div class="content">
+  <h2>Merender Array Menjadi Elemen JSX</h2>
+  <p>Dalam pengembangan web nyata (seperti ERP, E-commerce, Sosmed), data hampir tidak pernah ditulis pakem (hardcoded) satu per satu. Data datang dari backend dalam bentuk sekumpulan Array of Objects. Tugas Frontend adalah "menerjemahkan" array data tersebut menjadi sekumpulan elemen UI.</p>
+  <p>Di React, satu-satunya cara fungsional dan elegan untuk melakukan perulangan render adalah dengan Array Method: <code>Array.map()</code>.</p>
+  
+  <h3>Langkah-Langkah Menggunakan map()</h3>
+  <p>Fungsi <code>map()</code> mengembalikan array baru. Di dalam React JSX, jika Anda meletakkan sebuah Array berisi elemen JSX, React akan otomatis me-rendernya berurutan.</p>
+  ${codeBlock('jsx','const categories = ["Hardware", "Software", "Networking"];\n\nconst CategoryList = () => {\n  return (\n    <ul>\n      {categories.map((catName) => (\n        // Setiap string diubah menjadi elemen <li>\n        <li key={catName}>{catName}</li>\n      ))}\n    </ul>\n  );\n};')}
+
+  <h2>Deep Dive: Urgensi Prop <code>key</code></h2>
+  <p>Setiap kali Anda menggunakan <code>map()</code>, React mewajibkan Anda untuk menyematkan atribut khusus bernama <code>key</code> pada elemen paling luar (wrapper) yang di-return dari map tersebut.</p>
+  <p>Mengapa? React memiliki sistem bernama <strong>Virtual DOM</strong> dan algoritma <strong>Reconciliation</strong>. Saat ada pembaruan data (misalnya: 1 barang dihapus dari daftar keranjang yang berisi 100 barang), React harus membandingkan tampilan saat ini (sebelum dihapus) dengan tampilan baru (setelah dihapus).</p>
+  
+  <ul>
+    <li><strong>Jika TIDAK ADA <code>key</code> (Atau key sembarangan):</strong> React buta. Ia tidak tahu barang mana yang dihapus. React terpaksa merobohkan seluruh daftar 100 barang itu dan membangunnya ulang dari nol. Ini sangat lambat dan menghancurkan animasi.</li>
+    <li><strong>Jika MENGGUNAKAN <code>key</code> unik:</strong> React memiliki "KTP" untuk setiap elemen. Jika elemen dengan key <code>ID-54</code> dihapus, React hanya mencari elemen dengan KTP tersebut di layar, dan menghapusnya. 99 elemen lainnya dibiarkan utuh tanpa disentuh sama sekali. Sangat super efisien!</li>
+  </ul>
+  
+  <h3>Aturan Emas Pemilihan Key</h3>
+  <ol>
+    <li>Key <strong>wajib</strong> unik di antara saudara kandungnya (elemen lain di dalam daftar yang sama).</li>
+    <li>Key <strong>tidak boleh berubah</strong> (stabil). Jangan gunakan nilai acak seperti <code>Math.random()</code> sebagai key.</li>
+    <li>Selalu gunakan <strong>Primary Key / ID dari Database</strong> jika tersedia.</li>
+  </ol>
+  
+  ${callout('danger','Dosa Terbesar: Index sebagai Key pada Data Dinamis','Seringkali developer malas dan menggunakan index (urutan loop 0, 1, 2) sebagai key: <code>{data.map((item, index) =&gt; &lt;div key={index}&gt;)}</code>. <strong>JANGAN LAKUKAN INI!</strong> Jika Anda menambahkan item baru di atas daftar, semua index di bawahnya bergeser (+1). React akan mengira SEMUA elemen berubah, yang akan menyebabkan render ulang masif dan bug pada input form (input user akan melompat ke baris yang salah).')}
+
+  <h3>Contoh Kasus Real-World (Array of Objects)</h3>
+  ${codeBlock('jsx','// Mock data dari API (Backend)\nconst productList = [\n  { id: "P-101", name: "Laptop Dell", price: 15000000 },\n  { id: "P-102", name: "Mouse Logitech", price: 250000 },\n  { id: "P-103", name: "Keyboard Mechanical", price: 850000 }\n];\n\nconst ProductCatalog = () => {\n  return (\n    <div className="grid">\n      {productList.map((prod) => (\n        /* \n           Elemen paling luar di dalam map WAJIB punya key.\n           Kita gunakan prod.id yang unik dan permanen dari database.\n        */\n        <div key={prod.id} className="card">\n          <h3>{prod.name}</h3>\n          <p>Harga: Rp {prod.price.toLocaleString()}</p>\n          <button>Beli</button>\n        </div>\n      ))}\n    </div>\n  );\n};')}
+</div>`;
+
+CONTENT['m11-c'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#EC4899">Module 11 · Section C</span>
+  <h1 class="section-title">Evolusi Styling di React</h1>
+</div>
+<div class="content">
+  <h2>Tantangan Styling di Aplikasi Modern</h2>
+  <p>Dalam web statis biasa, kita menulis satu file <code>style.css</code> global yang memuat semua desain. Namun, di aplikasi React yang memiliki puluhan komponen, gaya penulisan ini akan menimbulkan bencana: <strong>Class Name Collision</strong> (Bentrok nama class). Jika ada 3 developer membuat tombol berbeda dan semuanya menggunakan nama class <code>.btn</code>, salah satu pasti akan "menimpa" desain yang lain.</p>
+  <p>Untuk mengatasi itu, ekosistem React memiliki beberapa pendekatan <em>styling</em>.</p>
+  
+  <h2>1. Inline Styling (Objek JavaScript)</h2>
+  <p>Anda bisa menulis CSS langsung di dalam elemen JSX menggunakan objek JS biasa. Perbedaannya dengan HTML:</p>
+  <ul>
+    <li>Menggunakan <em>camelCase</em>, bukan kebab-case (contoh: <code>backgroundColor</code>, bukan <code>background-color</code>).</li>
+    <li>Nilai bertipe <em>String</em> atau <em>Number</em> (jika Number, React otomatis menambahkan <code>px</code> pada properti ukuran).</li>
+  </ul>
+  
+  ${codeBlock('jsx','const DynamicCard = ({ isHighlighted }) => {\n  // Memisahkan objek style untuk keterbacaan kode\n  const cardStyle = {\n    // Dynamic styling berbasis props!\n    backgroundColor: isHighlighted ? "#ffeb3b" : "#ffffff",\n    padding: 20, // Otomatis menjadi "20px"\n    borderRadius: "12px",\n    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",\n    transition: "background 0.3s ease"\n  };\n\n  return (\n    <div style={cardStyle}>\n      <h2>Card Info</h2>\n      <p>Ini menggunakan Inline Style.</p>\n    </div>\n  );\n};')}
+  
+  <p><strong>Kelebihan:</strong> Sangat mudah membuat style yang berubah dinamis berdasarkan state/props tanpa membuat class baru.</p>
+  <p><strong>Kekurangan:</strong> Tidak mendukung <em>Media Queries</em> (responsif mobile), tidak mendukung <em>pseudo-classes</em> (seperti <code>:hover</code> atau <code>:active</code>), dan performanya berat jika diaplikasikan pada ribuan elemen karena style di-<em>inject</em> langsung ke tag HTML.</p>
+
+  <h2>2. CSS Modules (Solusi Standar Vite)</h2>
+  <p>Ini adalah pendekatan <em>best practice</em> yang disarankan jika Anda tidak menggunakan framework utilitas seperti Tailwind. Dengan CSS Modules, file CSS bersifat <strong>lokal</strong> untuk setiap komponen.</p>
+  <p>Caranya: Buat file dengan akhiran <code>.module.css</code>.</p>
+  
+  ${codeBlock('css','/* File: Navbar.module.css */\n.navContainer {\n  display: flex;\n  justify-content: space-between;\n  background: #333;\n  color: white;\n}\n\n/* Class bisa menggunakan hover! */\n.navLink:hover {\n  text-decoration: underline;\n  color: #61dafb;\n}')}
+  
+  <p>Kemudian di file JavaScript, kita melakukan "Import as Object":</p>
+  ${codeBlock('jsx','// File: Navbar.jsx\nimport styles from "./Navbar.module.css";\n\nconst Navbar = () => {\n  return (\n    // Kita mengakses class menggunakan notasi titik pada objek styles\n    <nav className={styles.navContainer}>\n      <h1>ERP System</h1>\n      <div>\n        <a href="#" className={styles.navLink}>Beranda</a>\n        <a href="#" className={styles.navLink}>Laporan</a>\n      </div>\n    </nav>\n  );\n};')}
+  
+  <p><strong>Bagaimana ini bekerja?</strong> Saat Vite mem-<em>build</em> aplikasi Anda, ia akan mengubah nama class <code>navContainer</code> menjadi nama acak yang unik secara global, misalnya <code>_navContainer_8x9ab_1</code>. Dengan begitu, class ini tidak akan pernah bentrok dengan <code>navContainer</code> milik komponen lain, meskipun nama variabelnya sama persis!</p>
+</div>`;
+
+CONTENT['m11-d'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#EC4899">Module 11 · Section D</span>
+  <h1 class="section-title">Conditional Rendering (Logika Bersyarat)</h1>
+</div>
+<div class="content">
+  <h2>Menampilkan UI Berdasarkan State/Props</h2>
+  <p>Inti dari aplikasi interaktif adalah UI yang bereaksi terhadap perubahan data. Contoh: Jika user belum login, tampilkan tombol "Login". Jika sudah, tampilkan "Avatar User". Jika data kosong, tampilkan gambar "Folder Kosong".</p>
+  <p>Karena kita menulis UI di dalam fungsi <code>return (...)</code> JSX, kita <strong>TIDAK BISA</strong> menggunakan syntax <code>if / else</code> atau <code>for</code> standar (karena <code>return</code> mengharapkan sebuah ekspresi (<em>expression</em>) yang menghasilkan nilai langsung, sedangkan blok <code>if</code> adalah pernyataan (<em>statement</em>)).</p>
+  <p>Sebagai gantinya, kita memiliki 3 pola standar di React:</p>
+  
+  <h3>1. Pola A atau B (Ternary Operator)</h3>
+  <p>Gunakan Ternary (<code>kondisi ? eksekusi_benar : eksekusi_salah</code>) ketika UI memiliki dua kemungkinan cabang (cabang A atau cabang B) yang dirender di lokasi yang persis sama.</p>
+  ${codeBlock('jsx','const CheckoutButton = ({ stock }) => {\n  return (\n    <div>\n      {/* Jika stok > 0, tampilkan tombol aktif, jika tidak, tombol mati (disabled) */}\n      {stock > 0 ? (\n        <button className="btn-buy">Beli Sekarang</button>\n      ) : (\n        <button disabled className="btn-empty">Stok Habis</button>\n      )}\n    </div>\n  );\n};')}
+  
+  <h3>2. Pola A atau Kosong (Logical AND <code>&amp;&amp;</code>)</h3>
+  <p>Gunakan ini jika Anda hanya ingin merender sesuatu jika kondisinya BENAR, dan tidak menampilkan <em>apapun</em> sama sekali jika SALAH.</p>
+  <p>Sifat unik JavaScript <em>short-circuit evaluation</em>: Jika ekspresi sebelah kiri <code>&amp;&amp;</code> bernilai <em>false</em>, JavaScript akan langsung berhenti dan mengabaikan bagian kanan. React akan melihat nilai <em>false</em> dan merender <em>null</em> (kosong) ke layar.</p>
+  ${codeBlock('jsx','const AdminPanel = ({ role, unreadMessages }) => {\n  return (\n    <div className="panel">\n      <h2>Menu Pengguna</h2>\n      \n      {/* \n        Hanya render tombol rahasia ini JIKA role adalah admin.\n        Jika user biasa, tidak dirender sama sekali.\n      */}\n      {role === "admin" && (\n        <button className="btn-danger">Hapus Database</button>\n      )}\n\n      {/* Menampilkan badge notifikasi HANYA jika ada pesan (> 0) */}\n      {unreadMessages > 0 && (\n        <span className="notification-badge">{unreadMessages} Pesan Baru</span>\n      )}\n    </div>\n  );\n};')}
+  
+  ${callout('warning','Hati-hati dengan Angka Nol (0) pada &&','Jika kondisi sebelah kiri bernilai <code>0</code>, JavaScript menganggap <code>0</code> sebagai <em>falsy</em>, tetapi React <strong>TETAP MERENDER angka 0 tersebut ke layar!</strong> Jadi, gunakan perbandingan eksplisit. <strong>Salah:</strong> <code>{list.length &amp;&amp; &lt;p&gt;Halo&lt;/p&gt;}</code> (Jika list kosong, layar akan menampilkan angka "0"). <strong>Benar:</strong> <code>{list.length &gt; 0 &amp;&amp; &lt;p&gt;Halo&lt;/p&gt;}</code>.')}
+
+  <h3>3. Pola <em>Early Return</em> (If-Else di luar JSX)</h3>
+  <p>Kadang, kondisi menyebabkan seluruh halaman berubah drastis (contoh: halaman "Loading..." vs halaman "Isi Konten"). Daripada membuat file JSX menjadi kotor dan sangat menjorok ke dalam dengan Ternary berlapis, gunakan pola <em>Early Return</em> dengan meletakkan <code>if</code> biasa SEBELUM perintah <code>return</code> komponen utama.</p>
+  ${codeBlock('jsx','const DataTable = ({ isLoading, isError, data }) => {\n  // 1. Kondisi Loading (Cegat eksekusi agar tidak turun ke bawah)\n  if (isLoading) {\n    return <div className="spinner">Memuat data dari server...</div>;\n  }\n\n  // 2. Kondisi Error (Cegat eksekusi jika fetch gagal)\n  if (isError) {\n    return <div className="error-alert">Gagal terhubung ke database.</div>;\n  }\n  \n  // 3. Kondisi Sukses (Render utama yang bersih)\n  return (\n    <table className="data-table">\n      {/* ... render list menggunakan data.map ... */}\n    </table>\n  );\n};')}
+</div>`;
+
+CONTENT['m11-e'] = `
+<div class="section-header">
+  <span class="section-module-badge" style="background:#EC4899">Module 11 · Section E</span>
+  <h1 class="section-title">Guided Lab &amp; Take-Home</h1>
+</div>
+<div class="content">
+  <h2>Guided Lab: Nested Dashboard Layout dengan Status Logika</h2>
+  <p>Dalam Lab kali ini, kita akan membangun pondasi utama untuk sistem Invoice/Tagihan. Kita akan melihat bagaimana komponen terkecil dipengaruhi secara drastis oleh logika bisnis yang disuntikkan via <em>Props</em>.</p>
+
+  ${stepCard(1,'Komponen Modular Terkecil: StatusBadge',`
+    <p>Komponen ini tidak perduli soal apa itu Invoice atau Data Transaksi. Tugas satu-satunya hanyalah: <em>Menerima teks status, lalu mengecat dirinya sendiri berdasarkan teks tersebut menggunakan Conditional Styling.</em></p>
+    ${codeBlock('jsx','// src/components/StatusBadge.jsx\nimport styles from "./StatusBadge.module.css";\n\nconst StatusBadge = ({ status }) => {\n  // Logika Bisnis: Menentukan kategori warna berdasarkan kata kunci status\n  const isSuccess = status === "Lunas" || status === "Terkirim";\n  const isPending = status === "Menunggu Pembayaran";\n\n  // Conditional CSS Modules Class\n  let badgeClass = styles.badgeDanger; // Default (merah / gagal)\n  \n  if (isSuccess) badgeClass = styles.badgeSuccess; // Hijau\n  else if (isPending) badgeClass = styles.badgeWarning; // Kuning\n\n  return <span className={badgeClass}>{status}</span>;\n};\n\nexport default StatusBadge;')}
+  `,true)}
+
+  ${stepCard(2,'Pembuatan Tabel Data (Mengkonsumsi Array dengan Key)',`
+    <p>Di sini kita akan menggunakan pola <em>Early Return</em> untuk menangani <em>Empty State</em> (saat data kosong), dan menggunakan <code>Array.map()</code> yang bersih.</p>
+    ${codeBlock('jsx','// src/components/TransactionTable.jsx\nimport StatusBadge from "./StatusBadge";\nimport styles from "./Table.module.css";\n\nconst TransactionTable = ({ transactions }) => {\n  // Early return: Tampilan Khusus Jika Tidak Ada Data\n  if (!transactions || transactions.length === 0) {\n    return (\n      <div className={styles.emptyState}>\n        <img src="/empty-folder.svg" alt="Kosong" />\n        <p>Belum ada transaksi bulan ini.</p>\n      </div>\n    );\n  }\n\n  return (\n    <table className={styles.customTable}>\n      <thead>\n        <tr>\n          <th>ID Transaksi</th>\n          <th>Nominal</th>\n          <th>Status Pembayaran</th>\n        </tr>\n      </thead>\n      <tbody>\n        {transactions.map((trx) => (\n          <tr key={trx.id}>\n            <td><strong>{trx.trxCode}</strong></td>\n            <td>Rp {trx.amount.toLocaleString("id-ID")}</td>\n            {/* Nested Component: Menyerahkan urusan warna ke StatusBadge */}\n            <td><StatusBadge status={trx.status} /></td>\n          </tr>\n        ))}\n      </tbody>\n    </table>\n  );\n};\n\nexport default TransactionTable;')}
+  `,false)}
+
+  ${stepCard(3,'Menyatukan Semuanya di Induk Utama',`
+    <p>Di komponen Root (App.jsx), kita bertindak sebagai konduktor. Menyediakan data mentah, dan membiarkan anak-anak kita (komponen di bawahnya) merendernya.</p>
+    ${codeBlock('jsx','// src/App.jsx\nimport TransactionTable from "./components/TransactionTable";\n\nconst App = () => {\n  // Simulasi Mock Data JSON dari API Backend\n  const invoiceData = [\n    { id: "INV-001", trxCode: "TRX-2026-X1", amount: 1500000, status: "Lunas" },\n    { id: "INV-002", trxCode: "TRX-2026-X2", amount: 300000, status: "Batal" },\n    { id: "INV-003", trxCode: "TRX-2026-X3", amount: 750000, status: "Menunggu Pembayaran" }\n  ];\n\n  return (\n    <div style={{ fontFamily: "Inter, sans-serif", padding: "2rem" }}>\n      <header style={{ borderBottom: "2px solid #eee", paddingBottom: "1rem" }}>\n        <h1>Dashboard Keuangan ERP</h1>\n        <p>Laporan Transaksi Real-time</p>\n      </header>\n      \n      <main style={{ marginTop: "2rem" }}>\n        {/* Render Nested Component dan menyuntikkan (inject) Array Data via Props */}\n        <TransactionTable transactions={invoiceData} />\n      </main>\n    </div>\n  );\n};\n\nexport default App;')}
+  `,false)}
+
+  <hr style="margin: 40px 0; border: 1px solid #E2E8F0;" />
+
+  <h2>Take-Home: Sistem Manajemen Tugas (Kanban MVP)</h2>
+  <p><strong>Latar Belakang Tugas:</strong> Perusahaan Anda ingin membuat modul <em>Project Management</em> ringan di dalam sistem ERP. Anda ditugaskan membangun prototipe antarmuka frontend berbasis React.</p>
+  
+  <h3>Spesifikasi Kebutuhan Sistem:</h3>
+  <ol>
+    <li>Buat proyek Vite React baru (Gunakan JS standar, buang file CSS bawaan).</li>
+    <li>Buat struktur Nested Components minimal: <code>TaskBoard</code> (Induk) &rarr; <code>TaskCard</code> (Anak).</li>
+    <li><strong>Data Statis (Mock):</strong> Siapkan array berisi minimal 6 objek tugas. Field wajib: <code>id</code> (unik), <code>title</code>, <code>assignee</code>, <code>priority</code> ("Low", "Medium", "High"), dan <code>isCompleted</code> (boolean true/false).</li>
+    <li><strong>Rendering List:</strong> Render semua tugas ke layar menggunakan <code>Array.map()</code>. Jangan lupakan prop <code>key</code>!</li>
+    <li><strong>Conditional Styling (CSS Modules):</strong> Jika prop <code>priority</code> adalah "High", pinggiran kartu (border) atau warnanya harus mencolok (merah). Medium (kuning), Low (hijau).</li>
+    <li><strong>Conditional Logic (Ternary / AND):</strong>
+      <ul>
+        <li>Jika <code>isCompleted</code> bernilai <em>true</em>, coret judul tugas (gunakan tag <code>&lt;del&gt;</code>) dan tampilkan label "Selesai".</li>
+        <li>Jika tugas tersebut belum ada yang mengerjakan (<code>assignee</code> kosong/null), render teks darurat peringatan "Belum Ada PIC!" menggunakan logika <code>&amp;&amp;</code>.</li>
+      </ul>
+    </li>
+  </ol>
+  
+  <h3>Cara Pengumpulan:</h3>
+  <p>Hapus folder <code>node_modules</code> (PENTING!), jadikan file berformat <code>.zip</code> dan unggah. Sertakan satu bukti <em>screenshot</em> tampilan antarmuka saat aplikasi berjalan di localhost Anda.</p>
 </div>`;
 
 function placeholder(mod,badge){

@@ -1,0 +1,48 @@
+{
+  "products": [
+    {
+      "code": "RM-001",
+      "name": "Kabel USB-C",
+      "description": "Kabel USB-C 1 meter, original",
+      "category": "Bahan Baku Elektronik",
+      "type": "raw_material",
+      "sku": "USB-C-1M",
+      "unit": "pcs",
+      "price": 25000,
+      "minStock": 50
+    },
+    {
+      "code": "RM-002",
+      "name": "Charger Original",
+      "description": "Charger 20W original",
+      "category": "Bahan Baku Elektronik",
+      "type": "raw_material",
+      "sku": "CHR-20W",
+      "unit": "pcs",
+      "price": 75000,
+      "minStock": 30
+    },
+    {
+      "code": "FG-001",
+      "name": "Laptop ASUS Zenbook 14",
+      "description": "Laptop ASUS Zenbook 14 inch, Intel Core i5",
+      "category": "Barang Jadi Elektronik",
+      "type": "finished_goods",
+      "sku": "ASUS-ZEN-14",
+      "unit": "pcs",
+      "price": 12000000,
+      "minStock": 5
+    },
+    {
+      "code": "FG-002",
+      "name": "Smartphone Samsung Galaxy A54",
+      "description": "Smartphone Samsung Galaxy A54 5G",
+      "category": "Barang Jadi Elektronik",
+      "type": "finished_goods",
+      "sku": "SAM-A54",
+      "unit": "pcs",
+      "price": 5500000,
+      "minStock": 10
+    }
+  ]
+}

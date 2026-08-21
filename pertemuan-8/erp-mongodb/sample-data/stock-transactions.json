@@ -1,0 +1,44 @@
+{
+  "transactions": [
+    {
+      "product": "RM-001",
+      "type": "in",
+      "quantity": 100,
+      "referenceNo": "PO-2024-001",
+      "notes": "Pembelian bahan baku bulanan",
+      "processedBy": "admin"
+    },
+    {
+      "product": "RM-002",
+      "type": "in",
+      "quantity": 50,
+      "referenceNo": "PO-2024-002",
+      "notes": "Pembelian bahan baku bulanan",
+      "processedBy": "admin"
+    },
+    {
+      "product": "RM-001",
+      "type": "out",
+      "quantity": 10,
+      "referenceNo": "SO-2024-001",
+      "notes": "Pengiriman pesanan customer",
+      "processedBy": "admin"
+    },
+    {
+      "product": "FG-001",
+      "type": "in",
+      "quantity": 20,
+      "referenceNo": "PO-2024-003",
+      "notes": "Pembelian barang jadi",
+      "processedBy": "admin"
+    },
+    {
+      "product": "FG-002",
+      "type": "out",
+      "quantity": 5,
+      "referenceNo": "SO-2024-002",
+      "notes": "Pengiriman pesanan customer",
+      "processedBy": "admin"
+    }
+  ]
+}

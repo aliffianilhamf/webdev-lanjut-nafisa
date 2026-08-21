@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Bahan Baku Elektronik",
+    "description": "Kategori untuk bahan baku elektronik",
+    "type": "raw_material"
+  },
+  {
+    "name": "Barang Jadi Elektronik",
+    "description": "Kategori untuk barang jadi elektronik",
+    "type": "finished_goods"
+  },
+  {
+    "name": "Aksesoris",
+    "description": "Kategori untuk aksesoris tambahan",
+    "type": "other"
+  }
+]

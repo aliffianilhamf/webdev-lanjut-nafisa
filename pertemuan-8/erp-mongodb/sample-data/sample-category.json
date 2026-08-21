@@ -1,0 +1,11 @@
+{
+  "code": "RM-001",
+  "name": "Kabel USB-C",
+  "description": "Kabel USB-C 1 meter",
+  "category": null,
+  "type": "raw_material",
+  "sku": "USB-C-1M",
+  "unit": "pcs",
+  "price": 25000,
+  "minStock": 50
+}
